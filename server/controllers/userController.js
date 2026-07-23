@@ -1,0 +1,81 @@
+const User = require('../models/User');
+const bcrypt = require('bcrypt');
+
+// GET /api/users/me — get current user profile
+exports.getMe = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        res.json({ success: true, data: user });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch profile' });
+    }
+};
+
+// PUT /api/users/me — update name or email
+exports.updateMe = async (req, res) => {
+    try {
+        const { name, email } = req.body;
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { name, email },
+            { new: true, runValidators: true }
+        ).select('-password');
+        res.json({ success: true, data: user });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to update profile' });
+    }
+};
+
+// PUT /api/users/me/password — change password
+exports.changePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        const user = await User.findById(req.user.id);
+        const valid = await bcrypt.compare(currentPassword, user.password);
+        if (!valid) return res.status(400).json({ error: 'Current password is incorrect' });
+        user.password = newPassword;
+        await user.save(); // pre-save hook hashes it
+        res.json({ success: true, message: 'Password updated successfully' });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to change password' });
+    }
+};
+
+// GET /api/users — list all users (admin view, same tenant)
+exports.getUsers = async (req, res) => {
+    try {
+        const users = await User.find().select('-password').sort({ createdAt: -1 });
+        res.json({ success: true, data: users });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch users' });
+    }
+};
+
+// PATCH /api/users/:id/role — update user role
+exports.updateRole = async (req, res) => {
+    try {
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { role: req.body.role },
+            { new: true }
+        ).select('-password');
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        res.json({ success: true, data: user });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to update role' });
+    }
+};
+
+// PATCH /api/users/:id/toggle — activate/deactivate user
+exports.toggleUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        user.isActive = !user.isActive;
+        await user.save();
+        res.json({ success: true, data: user });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to toggle user status' });
+    }
+};
