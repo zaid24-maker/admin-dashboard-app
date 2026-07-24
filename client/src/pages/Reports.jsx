@@ -77,9 +77,7 @@ const Reports = () => {
 
     return (
         <div className="space-y-6 pb-12">
-            <Toaster position="top-right" toastOptions={{
-                style: { background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155' }
-            }} />
+            
 
             {/* Header */}
             <div className="flex flex-wrap justify-between items-center gap-4 bg-slate-900/50 p-6 rounded-2xl border border-slate-800">

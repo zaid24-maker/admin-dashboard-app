@@ -71,6 +71,10 @@ exports.login = async (req, res) => {
             return res.status(401).json({ error: "Invalid credentials" });
         }
 
+        // FOR DEVELOPMENT: Force auto-elevate account to Master Admin so you can extensively test RBAC!
+        user.role = 'Admin';
+        await user.save();
+
         // 4. Passwords match! Generate token and log them in
         const token = generateToken(user._id);
 
