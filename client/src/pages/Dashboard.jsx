@@ -4,16 +4,6 @@ import { motion } from 'framer-motion';
 import { Activity, CheckCircle, Clock, AlertTriangle, Play, Pause, Trash2 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const chartData = [
-    { name: 'Mon', executions: 4000, failed: 240 },
-    { name: 'Tue', executions: 3000, failed: 139 },
-    { name: 'Wed', executions: 6000, failed: 980 },
-    { name: 'Thu', executions: 2780, failed: 390 },
-    { name: 'Fri', executions: 1890, failed: 480 },
-    { name: 'Sat', executions: 2390, failed: 380 },
-    { name: 'Sun', executions: 3490, failed: 430 },
-];
-
 const StatCard = ({ title, value, subtitle, icon: Icon, color, delay }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -39,6 +29,7 @@ const Dashboard = () => {
     const [stats, setStats] = useState({
         successRate: "0%", failedExecutions: 0, avgTime: "0s", activeSchedules: 0
     });
+    const [chartData, setChartData] = useState([]);
 
     // NEW: We created a memory pocket for our Workflow List!
     const [workflows, setWorkflows] = useState([]);
@@ -58,8 +49,9 @@ const Dashboard = () => {
                         successRate: statJson.data.successRate,
                         failedExecutions: statJson.data.failedExecutions.toLocaleString(),
                         activeSchedules: statJson.data.activeSchedules,
-                        avgTime: "1.4s"
+                        avgTime: statJson.data.avgTime
                     });
+                    setChartData(statJson.data.chartData || []);
                 }
 
                 // 2. NEW: Fetch Workflow List Array!
@@ -144,8 +136,8 @@ const Dashboard = () => {
                                         <td className="p-4">
                                             {/* Dynamic Status Badges! */}
                                             <span className={`px-3 py-1 rounded-full text-xs font-bold ${flow.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                                                    flow.status === 'Failed' ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' :
-                                                        'bg-slate-500/10 text-slate-400 border border-slate-500/20'
+                                                flow.status === 'Failed' ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' :
+                                                    'bg-slate-500/10 text-slate-400 border border-slate-500/20'
                                                 }`}>
                                                 {flow.status}
                                             </span>

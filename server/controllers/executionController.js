@@ -16,7 +16,50 @@ exports.runWorkflow = async (req, res) => {
         });
 
         setTimeout(async () => {
-            const isSuccess = Math.random() > 0.15;
+            let isSuccess = Math.random() > 0.15;
+            let overrideMessage = isSuccess ? 'Workflow executed successfully!' : 'External API timed out!';
+
+            const sendEmail = require('../utils/email');
+
+            // Inside runWorkflow's execution loop:
+            if (workflow.action === 'Send Webhook' && workflow.webhookConfig?.url) {
+                try {
+                    let parsedHeaders = { 'Content-Type': 'application/json' };
+                    try { if (workflow.webhookConfig.headers) Object.assign(parsedHeaders, JSON.parse(workflow.webhookConfig.headers)); } catch (e) { /* ignore parse error */ }
+
+                    const response = await fetch(workflow.webhookConfig.url, {
+                        method: workflow.webhookConfig.method || 'POST',
+                        headers: parsedHeaders,
+                        body: (workflow.webhookConfig.method !== 'GET' && workflow.webhookConfig.payload) ? workflow.webhookConfig.payload : undefined
+                    });
+
+                    if (response.ok) {
+                        isSuccess = true;
+                        overrideMessage = `Webhook success (HTTP ${response.status})`;
+                    } else {
+                        isSuccess = false;
+                        overrideMessage = `Webhook failed (HTTP ${response.status})`;
+                    }
+                } catch (err) {
+                    isSuccess = false;
+                    overrideMessage = `Webhook error: ${err.message}`;
+                }
+            } else if (workflow.action === 'Send Email' && workflow.emailConfig?.to) {
+                try {
+                    await sendEmail({
+                        to: workflow.emailConfig.to,
+                        subject: workflow.emailConfig.subject || 'Automated Workflow Alert',
+                        html: workflow.emailConfig.body || '<p>This is an automated workflow notification.</p>'
+                    });
+
+                    isSuccess = true;
+                    overrideMessage = `Email successfully dispatched to ${workflow.emailConfig.to}`;
+                } catch (err) {
+                    isSuccess = false;
+                    overrideMessage = `Failed to dispatch email: ${err.message}`;
+                }
+            }
+
             const endTime = Date.now();
             const duration = endTime - new Date(execution.startTime).getTime();
 
@@ -25,7 +68,7 @@ exports.runWorkflow = async (req, res) => {
                 endTime,
                 duration,
                 result: {
-                    message: isSuccess ? 'Workflow executed successfully!' : 'External API timed out!',
+                    message: overrideMessage,
                     recordsProcessed: isSuccess ? Math.floor(Math.random() * 500) + 1 : 0
                 }
             });
@@ -33,6 +76,20 @@ exports.runWorkflow = async (req, res) => {
             if (isSuccess) { workflow.executionCount += 1; }
             else { workflow.failedCount += 1; }
             await workflow.save();
+
+            // Broadast real-time WebSockets notification to frontend dashboard!
+            const io = req.app.get('io');
+            if (io) {
+                io.emit('execution_complete', {
+                    workflowId: workflow._id,
+                    workflowName: workflow.name,
+                    status: isSuccess ? 'success' : 'failed',
+                    message: overrideMessage,
+                    duration
+                });
+                console.log(`[Socket] Broadcasted execution_complete for ${workflow.name}`);
+            }
+
         }, 2000 + Math.random() * 3000);
 
         res.status(202).json({ success: true, message: "Workflow queued!", data: execution });

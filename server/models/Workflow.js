@@ -24,6 +24,17 @@ const workflowSchema = new mongoose.Schema({
         type: String,
         default: 'Log Data'
     },
+    webhookConfig: {
+        url: { type: String, trim: true },
+        method: { type: String, enum: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], default: 'POST' },
+        payload: { type: String }, // JSON stringified payload
+        headers: { type: String } // JSON stringified headers
+    },
+    emailConfig: {
+        to: { type: String, trim: true },
+        subject: { type: String, trim: true },
+        body: { type: String }
+    },
     executionCount: {
         type: Number,
         default: 0

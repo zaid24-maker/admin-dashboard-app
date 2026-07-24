@@ -23,10 +23,13 @@ const Badge = ({ role }) => {
 
 const Settings = () => {
     const [tab, setTab] = useState('profile');
-    const [profile, setProfile] = useState({ name: '', email: '' });
+    const [profile, setProfile] = useState({ name: '', email: '', phone: '' });
     const [pwForm, setPwForm] = useState({ currentPassword: '', newPassword: '', confirm: '' });
     const [users, setUsers] = useState([]);
     const [editingRole, setEditingRole] = useState(null);
+    const [inviteEmail, setInviteEmail] = useState('');
+    const [inviteRole, setInviteRole] = useState('Viewer');
+    const [isInviting, setIsInviting] = useState(false);
 
     useEffect(() => {
         fetchMe();
@@ -36,7 +39,7 @@ const Settings = () => {
     const fetchMe = async () => {
         const res = await fetch(`${API}/me`, { headers: { Authorization: `Bearer ${TOKEN()}` } });
         const json = await res.json();
-        if (json.success) setProfile({ name: json.data.name, email: json.data.email, role: json.data.role });
+        if (json.success) setProfile({ name: json.data.name, email: json.data.email, role: json.data.role, phone: json.data.phone || '' });
     };
 
     const fetchUsers = async () => {
@@ -50,7 +53,7 @@ const Settings = () => {
         const res = await fetch(`${API}/me`, {
             method: 'PUT',
             headers: { Authorization: `Bearer ${TOKEN()}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: profile.name, email: profile.email })
+            body: JSON.stringify({ name: profile.name, email: profile.email, phone: profile.phone })
         });
         const json = await res.json();
         json.success ? toast.success('Profile updated!') : toast.error(json.error || 'Failed');
@@ -87,6 +90,29 @@ const Settings = () => {
         });
         const json = await res.json();
         if (json.success) { toast.success(`User ${json.data.isActive ? 'activated' : 'deactivated'}`); fetchUsers(); }
+    };
+
+    const handleInvite = async (e) => {
+        e.preventDefault();
+        setIsInviting(true);
+        try {
+            const res = await fetch(`http://localhost:5001/api/team/invite`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${TOKEN()}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: inviteEmail, role: inviteRole })
+            });
+            const json = await res.json();
+            if (json.success) {
+                toast.success('Invitation email dispatched securely!');
+                setInviteEmail('');
+                fetchUsers();
+            } else {
+                toast.error(json.error || 'Failed to dispatch invite');
+            }
+        } catch (error) {
+            toast.error("Network connection failed.");
+        }
+        setIsInviting(false);
     };
 
     const TABS = [
@@ -146,6 +172,10 @@ const Settings = () => {
                                         <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Email Address</label>
                                         <input className={inputClass} type="email" value={profile.email} onChange={e => setProfile({ ...profile, email: e.target.value })} placeholder="you@example.com" />
                                     </div>
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Phone Number</label>
+                                        <input className={inputClass} type="tel" value={profile.phone} onChange={e => setProfile({ ...profile, phone: e.target.value })} placeholder="+1 (555) 000-0000" />
+                                    </div>
                                     <div className="flex justify-end">
                                         <button type="submit" className="flex items-center space-x-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3 px-7 rounded-xl transition-all">
                                             <Save size={16} /><span>Save Changes</span>
@@ -192,9 +222,20 @@ const Settings = () => {
                         {tab === 'users' && (
                             <motion.div key="users" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                                 className="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden">
-                                <div className="p-6 border-b border-slate-700">
-                                    <p className="font-bold text-white text-lg">Team Members</p>
-                                    <p className="text-slate-500 text-sm">{users.length} registered user{users.length !== 1 ? 's' : ''}</p>
+                                <div className="p-6 border-b border-slate-700 flex justify-between items-center bg-slate-900/40">
+                                    <div>
+                                        <p className="font-bold text-white text-lg">Team Members</p>
+                                        <p className="text-slate-500 text-sm">{users.length} registered user{users.length !== 1 ? 's' : ''}</p>
+                                    </div>
+                                    <form onSubmit={handleInvite} className="flex items-center space-x-3 bg-slate-800 border border-slate-700/50 p-2 rounded-xl shadow-lg">
+                                        <input type="email" required value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} placeholder="Invite via email..." className="bg-transparent text-white text-sm focus:outline-none px-3 w-48 tracking-wide placeholder-slate-500" />
+                                        <select value={inviteRole} onChange={e => setInviteRole(e.target.value)} className="bg-slate-900 text-xs font-bold text-slate-300 rounded-lg px-3 py-2 focus:outline-none border border-slate-700 transition-colors hover:border-indigo-500 cursor-pointer">
+                                            {ROLES.map(r => <option key={r}>{r}</option>)}
+                                        </select>
+                                        <button type="submit" disabled={isInviting} className="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all shadow-md disabled:opacity-50">
+                                            {isInviting ? 'Sending...' : 'Invite'}
+                                        </button>
+                                    </form>
                                 </div>
                                 <table className="w-full">
                                     <thead>

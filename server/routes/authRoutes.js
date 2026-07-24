@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { register, login, me } = require('../controllers/authController');
+const { register, login, me, sendOtp, verifyOtp } = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
 
 router.get('/test', (req, res) => {
@@ -9,6 +9,8 @@ router.get('/test', (req, res) => {
 
 router.post('/register', register);
 router.post('/login', login);
+router.post('/otp/send', sendOtp);
+router.post('/otp/verify', verifyOtp);
 router.get('/me', protect, me);
 
 module.exports = router;

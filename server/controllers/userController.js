@@ -12,17 +12,23 @@ exports.getMe = async (req, res) => {
     }
 };
 
-// PUT /api/users/me — update name or email
+// PUT /api/users/me — update name, email, phone
 exports.updateMe = async (req, res) => {
     try {
-        const { name, email } = req.body;
+        const { name, email, phone } = req.body;
+        console.log(`[PROFILE_UPDATE] Attempting to update user: ${req.user.id}`);
+        console.log(`[PROFILE_UPDATE] Payload received — Name: ${name}, Email: ${email}, Phone: ${phone}`);
+
         const user = await User.findByIdAndUpdate(
             req.user.id,
-            { name, email },
-            { new: true, runValidators: true }
+            { name, email, phone },
+            { returnDocument: 'after', runValidators: true }
         ).select('-password');
+
+        console.log(`[PROFILE_UPDATE] Success! Saved user:`, user);
         res.json({ success: true, data: user });
     } catch (err) {
+        console.error(`[PROFILE_UPDATE] FAILED:`, err);
         res.status(500).json({ error: 'Failed to update profile' });
     }
 };
@@ -58,7 +64,7 @@ exports.updateRole = async (req, res) => {
         const user = await User.findByIdAndUpdate(
             req.params.id,
             { role: req.body.role },
-            { new: true }
+            { returnDocument: 'after' }
         ).select('-password');
         if (!user) return res.status(404).json({ error: 'User not found' });
         res.json({ success: true, data: user });

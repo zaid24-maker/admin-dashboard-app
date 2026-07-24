@@ -7,11 +7,20 @@ const Workflows = () => {
     const [workflows, setWorkflows] = useState([]);
     const [isFlowModalOpen, setIsFlowModalOpen] = useState(false);
     const [currentWorkflow, setCurrentWorkflow] = useState(null);
-    const [formData, setFormData] = useState({ name: '', platform: 'Custom', trigger: 'Manual', action: 'Log Data' });
+    const [formData, setFormData] = useState({ name: '', platform: 'Custom', trigger: 'Manual', action: 'Log Data', webhookConfig: { url: '', method: 'POST', headers: '', payload: '' }, emailConfig: { to: '', subject: '', body: '' } });
     const [runningIds, setRunningIds] = useState({});
+    const [userRole, setUserRole] = useState('Viewer');
     const navigate = useNavigate();
 
     useEffect(() => {
+        const fetchMe = async () => {
+            try {
+                const res = await fetch('http://localhost:5001/api/users/me', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+                const json = await res.json();
+                if (json.success) setUserRole(json.data.role);
+            } catch (err) { }
+        };
+        fetchMe();
         fetchWorkflows();
     }, []);
 
@@ -68,13 +77,13 @@ const Workflows = () => {
 
     const openCreateModal = () => {
         setCurrentWorkflow(null);
-        setFormData({ name: '', platform: 'Custom', trigger: 'Manual', action: 'Log Data' });
+        setFormData({ name: '', platform: 'Custom', trigger: 'Manual', action: 'Log Data', webhookConfig: { url: '', method: 'POST', headers: '', payload: '' }, emailConfig: { to: '', subject: '', body: '' } });
         setIsFlowModalOpen(true);
     };
 
     const openEditModal = (flow) => {
         setCurrentWorkflow(flow);
-        setFormData({ name: flow.name, platform: flow.platform || 'Custom', trigger: flow.trigger || 'Manual', action: flow.action || 'Log Data' });
+        setFormData({ name: flow.name, platform: flow.platform || 'Custom', trigger: flow.trigger || 'Manual', action: flow.action || 'Log Data', webhookConfig: flow.webhookConfig || { url: '', method: 'POST', headers: '', payload: '' }, emailConfig: flow.emailConfig || { to: '', subject: '', body: '' } });
         setIsFlowModalOpen(true);
     };
 
@@ -109,13 +118,15 @@ const Workflows = () => {
                     <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-2">Workflow Management</h1>
                     <p className="text-slate-400 text-sm font-medium tracking-wide">Create, configure, and seamlessly orchestrate all of your automation pipelines.</p>
                 </div>
-                <button
-                    onClick={openCreateModal}
-                    className="flex items-center space-x-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-[0_0_30px_-5px_rgba(99,102,241,0.5)] active:scale-[0.98]"
-                >
-                    <Plus size={20} />
-                    <span>Create Pipeline</span>
-                </button>
+                {userRole !== 'Viewer' && (
+                    <button
+                        onClick={openCreateModal}
+                        className="flex items-center space-x-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-[0_0_30px_-5px_rgba(99,102,241,0.5)] active:scale-[0.98]"
+                    >
+                        <Plus size={20} />
+                        <span>Create Pipeline</span>
+                    </button>
+                )}
             </div>
 
             {/* Workflow List Table */}
@@ -161,25 +172,31 @@ const Workflows = () => {
                                         </span>
                                     </td>
                                     <td className="p-5">
-                                        <div className="flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button
-                                                onClick={() => handleRun(flow)}
-                                                disabled={!!runningIds[flow._id]}
-                                                className={`p-3 rounded-xl font-bold transition-all shadow-lg border ${runningIds[flow._id] === 'queued'
+                                        {userRole !== 'Viewer' ? (
+                                            <div className="flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button
+                                                    onClick={() => handleRun(flow)}
+                                                    disabled={!!runningIds[flow._id]}
+                                                    className={`p-3 rounded-xl font-bold transition-all shadow-lg border ${runningIds[flow._id] === 'queued'
                                                         ? 'bg-emerald-600 text-white border-transparent'
                                                         : runningIds[flow._id] === 'running'
                                                             ? 'bg-slate-800 text-blue-400 border-slate-700 cursor-not-allowed'
                                                             : 'bg-slate-900/80 hover:bg-emerald-600 text-emerald-400 hover:text-white border-slate-700/50 hover:border-transparent'
-                                                    }`}
-                                                title="Run Workflow"
-                                            >
-                                                {runningIds[flow._id] === 'running' ? <Loader2 size={18} className="animate-spin" /> :
-                                                    runningIds[flow._id] === 'queued' ? <CheckCircle2 size={18} /> :
-                                                        <Play size={18} />}
-                                            </button>
-                                            <button onClick={() => openEditModal(flow)} className="p-3 bg-slate-900/80 hover:bg-indigo-600 rounded-xl text-indigo-400 hover:text-white transition-all shadow-lg border border-slate-700/50 hover:border-transparent"><Edit size={18} /></button>
-                                            <button onClick={() => handleDelete(flow._id)} className="p-3 bg-slate-900/80 hover:bg-rose-600 rounded-xl text-rose-400 hover:text-white transition-all shadow-lg border border-slate-700/50 hover:border-transparent"><Trash2 size={18} /></button>
-                                        </div>
+                                                        }`}
+                                                    title="Run Workflow"
+                                                >
+                                                    {runningIds[flow._id] === 'running' ? <Loader2 size={18} className="animate-spin" /> :
+                                                        runningIds[flow._id] === 'queued' ? <CheckCircle2 size={18} /> :
+                                                            <Play size={18} />}
+                                                </button>
+                                                <button onClick={() => openEditModal(flow)} className="p-3 bg-slate-900/80 hover:bg-indigo-600 rounded-xl text-indigo-400 hover:text-white transition-all shadow-lg border border-slate-700/50 hover:border-transparent"><Edit size={18} /></button>
+                                                <button onClick={() => handleDelete(flow._id)} className="p-3 bg-slate-900/80 hover:bg-rose-600 rounded-xl text-rose-400 hover:text-white transition-all shadow-lg border border-slate-700/50 hover:border-transparent"><Trash2 size={18} /></button>
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center justify-center text-xs font-bold text-slate-500 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                                                Read Only
+                                            </div>
+                                        )}
                                     </td>
                                 </tr>
                             ))}
@@ -244,8 +261,60 @@ const Workflows = () => {
                                         <option value="Log Data">📝 Log Data to Console</option>
                                         <option value="Send Email">🚀 Send Mass Email Alert</option>
                                         <option value="Format Stats">📊 Generate Statistics</option>
+                                        <option value="Send Webhook">🔗 Send Webhook Request</option>
                                     </select>
                                 </div>
+
+                                {formData.action === 'Send Webhook' && (
+                                    <div className="space-y-4 p-5 bg-slate-950 border border-indigo-500/30 rounded-xl relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 p-3 text-2xl opacity-10">🔗</div>
+                                        <h3 className="text-sm font-bold text-indigo-400 uppercase tracking-widest mb-3">Webhook Configuration</h3>
+
+                                        <div className="grid grid-cols-3 gap-4">
+                                            <div className="col-span-2">
+                                                <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Endpoint URL</label>
+                                                <input type="url" required value={formData.webhookConfig.url} onChange={e => setFormData({ ...formData, webhookConfig: { ...formData.webhookConfig, url: e.target.value } })} className="w-full bg-slate-900 border border-slate-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-indigo-500 transition-all text-sm" placeholder="https://api.example.com/webhook" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Method</label>
+                                                <select value={formData.webhookConfig.method} onChange={e => setFormData({ ...formData, webhookConfig: { ...formData.webhookConfig, method: e.target.value } })} className="w-full bg-slate-900 border border-slate-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-indigo-500 transition-all text-sm font-semibold">
+                                                    <option>POST</option><option>GET</option><option>PUT</option><option>DELETE</option><option>PATCH</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Headers (JSON format)</label>
+                                                <textarea value={formData.webhookConfig.headers} onChange={e => setFormData({ ...formData, webhookConfig: { ...formData.webhookConfig, headers: e.target.value } })} className="w-full bg-slate-900 border border-slate-700 text-slate-300 rounded-lg px-4 py-3 focus:outline-none focus:border-indigo-500 transition-all text-xs font-mono h-24" placeholder='{"Authorization": "Bearer token"}'></textarea>
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Payload (JSON format)</label>
+                                                <textarea value={formData.webhookConfig.payload} onChange={e => setFormData({ ...formData, webhookConfig: { ...formData.webhookConfig, payload: e.target.value } })} className="w-full bg-slate-900 border border-slate-700 text-slate-300 rounded-lg px-4 py-3 focus:outline-none focus:border-indigo-500 transition-all text-xs font-mono h-24" placeholder='{"status": "success", "id": 123}'></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {formData.action === 'Send Email' && (
+                                    <div className="space-y-4 p-5 bg-slate-950 border border-emerald-500/30 rounded-xl relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 p-3 text-2xl opacity-10">✉️</div>
+                                        <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-widest mb-3">Email Configuration</h3>
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Recipient (To)</label>
+                                            <input type="email" required value={formData.emailConfig.to} onChange={e => setFormData({ ...formData, emailConfig: { ...formData.emailConfig, to: e.target.value } })} className="w-full bg-slate-900 border border-slate-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-emerald-500 transition-all text-sm" placeholder="user@company.com" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Subject</label>
+                                            <input type="text" required value={formData.emailConfig.subject} onChange={e => setFormData({ ...formData, emailConfig: { ...formData.emailConfig, subject: e.target.value } })} className="w-full bg-slate-900 border border-slate-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-emerald-500 transition-all text-sm" placeholder="Automation Alert" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Email Body (HTML Supported)</label>
+                                            <textarea required value={formData.emailConfig.body} onChange={e => setFormData({ ...formData, emailConfig: { ...formData.emailConfig, body: e.target.value } })} className="w-full bg-slate-900 border border-slate-700 text-slate-300 rounded-lg px-4 py-3 focus:outline-none focus:border-emerald-500 transition-all text-xs h-24" placeholder="<h1>Alert Triggered!</h1>"></textarea>
+                                        </div>
+                                    </div>
+                                )}
+
                                 <div className="pt-6 flex justify-end space-x-4 border-t border-white/5">
                                     <button type="button" onClick={() => setIsFlowModalOpen(false)} className="px-6 py-4 rounded-xl font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition-all">Abort</button>
                                     <button type="submit" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-[0_0_30px_-5px_rgba(99,102,241,0.5)] active:scale-[0.98]">

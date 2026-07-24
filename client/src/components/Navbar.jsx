@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Search, LogOut, User, ChevronDown } from 'lucide-react';
+import { Bell, Search, LogOut, User, ChevronDown, Sun, Moon } from 'lucide-react';
 
 const Navbar = () => {
     const [userName, setUserName] = useState('');
     const [showMenu, setShowMenu] = useState(false);
+    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -20,6 +21,15 @@ const Navbar = () => {
         };
         fetchMe();
     }, []);
+
+    useEffect(() => {
+        if (theme === 'light') {
+            document.documentElement.classList.add('light-mode');
+        } else {
+            document.documentElement.classList.remove('light-mode');
+        }
+        localStorage.setItem('theme', theme);
+    }, [theme]);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -41,6 +51,17 @@ const Navbar = () => {
 
             {/* Right Side */}
             <div className="flex items-center space-x-4">
+
+                {/* Theme Toggle */}
+                <motion.button
+                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                    whileHover={{ scale: 1.15, rotate: 15 }}
+                    whileTap={{ scale: 0.85 }}
+                    className="p-2 text-slate-400 hover:text-indigo-400 transition-colors"
+                >
+                    {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                </motion.button>
+
                 {/* Bell */}
                 <motion.button
                     whileHover={{ scale: 1.15, rotate: 15 }}
