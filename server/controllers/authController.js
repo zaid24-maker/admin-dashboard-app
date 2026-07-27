@@ -3,6 +3,8 @@ const OTP = require('../models/OTP');
 const jwt = require('jsonwebtoken');
 const { Resend } = require('resend');
 const crypto = require('crypto');
+const speakeasy = require('speakeasy');
+const QRCode = require('qrcode');
 
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
@@ -74,6 +76,10 @@ exports.login = async (req, res) => {
         // FOR DEVELOPMENT: Force auto-elevate account to Master Admin so you can extensively test RBAC!
         user.role = 'Admin';
         await user.save();
+
+        if (user.twoFactorEnabled) {
+            return res.status(200).json({ success: true, requires2FA: true, userId: user._id });
+        }
 
         // 4. Passwords match! Generate token and log them in
         const token = generateToken(user._id);
@@ -190,4 +196,57 @@ exports.verifyOtp = async (req, res) => {
         console.error("OTP Verify Error:", error);
         res.status(500).json({ error: "Failed to verify OTP" });
     }
-}
+};
+
+// 2FA TOTP Generators
+exports.generate2FA = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        const secret = speakeasy.generateSecret({ name: `AutoDash (${user.email})` });
+        const qrCodeUrl = await QRCode.toDataURL(secret.otpauth_url);
+
+        const backupKeys = Array.from({ length: 5 }, () => crypto.randomBytes(8).toString('hex'));
+
+        await User.findByIdAndUpdate(req.user.id, {
+            twoFactorSecret: secret.base32,
+            twoFactorBackupKeys: backupKeys
+        });
+
+        res.json({ success: true, qrCode: qrCodeUrl, backupKeys });
+    } catch (e) { res.status(500).json({ error: '2FA Generation Failed' }); }
+};
+
+exports.enable2FA = async (req, res) => {
+    try {
+        const { code } = req.body;
+        const user = await User.findById(req.user.id);
+        const verified = speakeasy.totp.verify({ secret: user.twoFactorSecret, encoding: 'base32', token: code });
+
+        if (verified) {
+            user.twoFactorEnabled = true;
+            await user.save();
+            res.json({ success: true, message: '2FA successfully locked' });
+        } else {
+            res.status(400).json({ error: 'Invalid authenticator code' });
+        }
+    } catch (e) { res.status(500).json({ error: 'Validation failed' }); }
+};
+
+exports.login2FA = async (req, res) => {
+    try {
+        const { userId, code } = req.body;
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ error: 'User invalid' });
+
+        const isBackup = user.twoFactorBackupKeys?.includes(code);
+        const verified = isBackup || speakeasy.totp.verify({ secret: user.twoFactorSecret, encoding: 'base32', token: code });
+
+        if (verified) {
+            if (isBackup) await User.findByIdAndUpdate(userId, { $pull: { twoFactorBackupKeys: code } });
+            const token = generateToken(user._id);
+            res.status(200).json({ success: true, token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+        } else {
+            res.status(401).json({ error: 'Core cryptographic failure. Code invalid.' });
+        }
+    } catch (e) { res.status(500).json({ error: 'Server error' }); }
+};

@@ -56,3 +56,24 @@ exports.inviteUser = async (req, res) => {
         res.status(500).json({ error: "Failed to dispatch email invite over SMTP." });
     }
 };
+
+exports.removeUser = async (req, res) => {
+    try {
+        if (req.user.role !== 'Admin' && req.user.role !== 'Owner') {
+            return res.status(403).json({ error: "Only global Admins can physically remove teammates." });
+        }
+
+        // Prevent suicide deletion
+        if (req.user.id === req.params.id) {
+            return res.status(400).json({ error: "You cannot eradicate your own admin account." });
+        }
+
+        const userAuth = await User.findById(req.params.id);
+        if (!userAuth) return res.status(404).json({ error: "User phantom not found." });
+
+        await User.deleteOne({ _id: req.params.id });
+        res.status(200).json({ success: true, message: "User profile absolutely erased from platform." });
+    } catch (err) {
+        res.status(500).json({ error: "Critical failure eradicating user instance." });
+    }
+};

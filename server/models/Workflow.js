@@ -22,7 +22,7 @@ const workflowSchema = new mongoose.Schema({
     },
     action: {
         type: String,
-        default: 'Log Data'
+        default: 'pending' // pending, active, paused
     },
     webhookConfig: {
         url: { type: String, trim: true },
@@ -34,6 +34,10 @@ const workflowSchema = new mongoose.Schema({
         to: { type: String, trim: true },
         subject: { type: String, trim: true },
         body: { type: String }
+    },
+    uiPosition: {
+        type: Object,
+        default: { trigger: { x: 50, y: 150 }, action: { x: 450, y: 150 } }
     },
     executionCount: {
         type: Number,

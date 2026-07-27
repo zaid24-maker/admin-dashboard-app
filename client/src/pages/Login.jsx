@@ -1,16 +1,20 @@
 import { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Workflow, KeyRound, Mail, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Workflow, KeyRound, Mail, ShieldCheck, QrCode } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Login = () => {
-    const [authMode, setAuthMode] = useState('login'); // 'login' | 'register' | 'otp-request' | 'otp-verify'
+    const [authMode, setAuthMode] = useState('login'); // 'login' | 'register' | 'otp-request' | 'otp-verify' | 'twfa-verify'
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [otpCode, setOtpCode] = useState('');
+
+    // 2FA variables
+    const [tempUserId, setTempUserId] = useState(null);
     const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
 
     // Already logged in → skip login page
@@ -31,9 +35,15 @@ const Login = () => {
             });
             const data = await res.json();
             if (data.success) {
-                localStorage.setItem('token', data.token);
-                toast.success('Authentication successful!');
-                navigate('/dashboard');
+                if (data.requires2FA) {
+                    setTempUserId(data.userId);
+                    setAuthMode('twfa-verify');
+                    toast.success('2FA Required');
+                } else {
+                    localStorage.setItem('token', data.token);
+                    toast.success('Authentication successful!');
+                    navigate('/dashboard');
+                }
             } else {
                 toast.error(data.error || 'Authentication failed. Check your credentials.');
             }
@@ -42,6 +52,26 @@ const Login = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleTwfaSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const res = await fetch(`http://localhost:5001/api/auth/login/2fa`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: tempUserId, code: otpCode })
+            });
+            const data = await res.json();
+            if (data.success) {
+                localStorage.setItem('token', data.token);
+                toast.success('Authenticator Verified!');
+                navigate('/dashboard');
+            } else {
+                toast.error(data.error || 'Invalid code');
+            }
+        } finally { setLoading(false); }
     };
 
     const handleOtpRequest = async (e) => {
@@ -111,10 +141,10 @@ const Login = () => {
                 {/* Logo */}
                 <motion.div layout className="text-center flex flex-col items-center">
                     <motion.div layoutId="logo" className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(99,102,241,0.6)]">
-                        {authMode === 'otp-verify' ? <ShieldCheck size={32} className="text-white" /> : <Workflow size={32} className="text-white" />}
+                        {authMode === 'otp-verify' ? <ShieldCheck size={32} className="text-white" /> : authMode === 'twfa-verify' ? <QrCode size={32} className="text-white" /> : <Workflow size={32} className="text-white" />}
                     </motion.div>
                     <motion.h2 layout className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-2 tracking-tight">
-                        {authMode === 'register' ? 'Create Account' : authMode === 'otp-verify' ? 'Secure Login' : 'Welcome Back'}
+                        {authMode === 'register' ? 'Create Account' : authMode === 'otp-verify' ? 'Secure OTP Login' : authMode === 'twfa-verify' ? 'Authenticator' : 'Welcome Back'}
                     </motion.h2>
                 </motion.div>
 
@@ -130,6 +160,19 @@ const Login = () => {
 
                             <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading} className="w-full mt-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg text-lg flex items-center justify-center space-x-2">
                                 <span>{loading ? 'Authenticating...' : authMode === 'register' ? 'Create Account' : 'Sign In'}</span>
+                            </motion.button>
+                        </motion.form>
+                    )}
+
+                    {/* TWO-FACTOR TOTP VERIFICATION */}
+                    {authMode === 'twfa-verify' && (
+                        <motion.form key="twfa-ver" variants={formVariants} initial="hidden" animate="visible" exit="exit" onSubmit={handleTwfaSubmit} className="space-y-4">
+                            <p className="text-slate-400 text-sm text-center mb-4">You have strict 2FA enabled. Enter the 6-digit code or a Backup Key to proceed.</p>
+                            <input type="text" placeholder="6-Digit TOTP" className="w-full text-center tracking-[0.3em] text-3xl font-mono bg-slate-950/50 border border-indigo-500/50 text-indigo-400 rounded-xl px-5 py-4 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition-all placeholder-indigo-900/20" value={otpCode} onChange={e => setOtpCode(e.target.value)} required />
+
+                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading} className="w-full mt-2 bg-indigo-600 text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] text-lg flex items-center justify-center space-x-2">
+                                <span>{loading ? 'Authenticating...' : 'Verify Authenticator'}</span>
+                                <ShieldCheck size={18} />
                             </motion.button>
                         </motion.form>
                     )}
@@ -174,8 +217,8 @@ const Login = () => {
                     {authMode === 'register' && (
                         <p className="text-center text-slate-500 text-sm">Already have an account? <button onClick={() => setAuthMode('login')} className="text-indigo-400 font-bold hover:text-indigo-300">Sign In</button></p>
                     )}
-                    {(authMode === 'otp-request' || authMode === 'otp-verify') && (
-                        <button type="button" onClick={() => setAuthMode('login')} className="w-full py-3 text-slate-400 font-bold hover:text-white transition-all text-sm flex items-center justify-center">
+                    {(authMode === 'otp-request' || authMode === 'otp-verify' || authMode === 'twfa-verify') && (
+                        <button type="button" onClick={() => { setAuthMode('login'); setTempUserId(null); }} className="w-full py-3 text-slate-400 font-bold hover:text-white transition-all text-sm flex items-center justify-center">
                             ← Back to Password Login
                         </button>
                     )}

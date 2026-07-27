@@ -3,7 +3,9 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const { Worker } = require('worker_threads');
 const { initScheduler } = require('./controllers/scheduleController');
+const path = require('path');
 
 dotenv.config();
 
@@ -16,6 +18,7 @@ app.use(cookieParser());
 connectDB().then(() => initScheduler());
 
 // Routes
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/files', require('./routes/fileRoutes'));
 app.use('/api/executions', require('./routes/executionRoutes'));
@@ -39,5 +42,19 @@ io.on('connection', (socket) => {
     console.log(`[Socket] Live Client Connected: ${socket.id}`);
 });
 
+app.get(/(.*)/, (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/dist/index.html'));
+});
+
+// Telemetry Worker Thread Initiation (Phase 19)
+const telemetryWorker = new Worker(path.join(__dirname, 'utils/telemetryWorker.js'));
+telemetryWorker.on('message', (metrics) => {
+    io.emit('server_metrics', metrics);
+});
+telemetryWorker.on('error', (err) => {
+    console.error('[CRITICAL] Telemetry worker fatality:', err);
+});
+
+// Port and Startup
 const PORT = process.env.PORT || 5001;
 server.listen(PORT, () => console.log(`Server and WebSockets running on port ${PORT}`));

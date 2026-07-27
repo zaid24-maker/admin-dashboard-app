@@ -7,7 +7,12 @@ const userSchema = new mongoose.Schema({
     phone: { type: String, unique: true, sparse: true },
     password: { type: String, required: true },
     role: { type: String, default: 'Tester' },
-    isActive: { type: Boolean, default: true }
+    isActive: { type: Boolean, default: true },
+    avatar: { type: String, default: null },
+    workTarget: { type: Number, default: 50 },
+    twoFactorSecret: { type: String },
+    twoFactorEnabled: { type: Boolean, default: false },
+    twoFactorBackupKeys: [{ type: String }]
 }, { timestamps: true });
 
 userSchema.pre('save', async function () {

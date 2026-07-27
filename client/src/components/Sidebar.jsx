@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Workflow, Activity, Settings, ChevronLeft, ChevronRight, PlaySquare, CalendarDays, BarChart2 } from 'lucide-react';
+import { Home, Workflow, Activity, Settings, ChevronLeft, ChevronRight, PlaySquare, CalendarDays, BarChart2, Target, Server } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Sidebar = () => {
@@ -16,6 +16,8 @@ const Sidebar = () => {
         { name: 'Executions', path: '/executions', icon: PlaySquare },
         { name: 'Schedules', path: '/schedules', icon: CalendarDays },
         { name: 'Reports', path: '/reports', icon: BarChart2 },
+        { name: 'Team Operations', path: '/operations', icon: Target },
+        { name: 'System Diagnostics', path: '/diagnostics', icon: Server },
         { name: 'Settings', path: '/settings', icon: Settings },
     ];
 

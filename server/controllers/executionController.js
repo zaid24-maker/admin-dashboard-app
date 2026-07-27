@@ -1,5 +1,6 @@
 const Execution = require('../models/Execution');
 const Workflow = require('../models/Workflow');
+const User = require('../models/User');
 
 exports.runWorkflow = async (req, res) => {
     try {
@@ -139,5 +140,39 @@ exports.clearAllExecutions = async (req, res) => {
         res.status(200).json({ success: true, message: "All execution logs cleared." });
     } catch (error) {
         res.status(500).json({ error: "Server error" });
+    }
+};
+
+exports.getOperationsData = async (req, res) => {
+    try {
+        const users = await User.find().select('name email role avatar workTarget isActive');
+
+        const executions = await Execution.aggregate([
+            { $group: { _id: "$triggeredBy", count: { $sum: 1 } } }
+        ]);
+
+        const teamData = users.map(u => {
+            const exeInfo = executions.find(e => e._id?.toString() === u._id.toString());
+            return {
+                _id: u._id,
+                name: u.name,
+                role: u.role,
+                avatar: u.avatar,
+                isActive: u.isActive,
+                workTarget: u.workTarget || 50,
+                completed: exeInfo ? exeInfo.count : 0
+            };
+        });
+
+        const feed = await Execution.find()
+            .populate('triggeredBy', 'name avatar role')
+            .populate('workflow', 'name platform')
+            .sort({ startTime: -1 })
+            .limit(50);
+
+        res.status(200).json({ success: true, roster: teamData, feed });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch operations data" });
     }
 };

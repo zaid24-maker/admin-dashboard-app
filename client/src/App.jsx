@@ -8,15 +8,20 @@ import Executions from './pages/Executions';
 import Schedules from './pages/Schedules';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
+import Operations from './pages/Operations';
+import Diagnostics from './pages/Diagnostics';
 import toast, { Toaster } from 'react-hot-toast';
-import { useEffect } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import { io } from 'socket.io-client';
+
+const Canvas = lazy(() => import('./pages/Canvas'));
 
 const socket = io('http://localhost:5001', { withCredentials: true });
 
 function App() {
   useEffect(() => {
     socket.on('execution_complete', (data) => {
+      window.dispatchEvent(new CustomEvent('new-notification', { detail: data }));
       if (data.status === 'success') {
         toast.success(`Pipeline [${data.workflowName}] Completed: ${data.message}`, {
           duration: 6000,
@@ -50,7 +55,10 @@ function App() {
           <Route path="/executions" element={<Executions />} />
           <Route path="/schedules" element={<Schedules />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/operations" element={<Operations />} />
+          <Route path="/diagnostics" element={<Diagnostics />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/workflows/:id/canvas" element={<Suspense fallback={<div className="h-screen w-full flex items-center justify-center bg-slate-950 text-emerald-400 font-bold uppercase tracking-widest text-xs animate-pulse">Initializing Render Engine...</div>}><Canvas /></Suspense>} />
         </Route>
 
         {/* 3. Fallback Route: If user types random bad URL, legally redirect them to Login */}

@@ -85,3 +85,38 @@ exports.toggleUser = async (req, res) => {
         res.status(500).json({ error: 'Failed to toggle user status' });
     }
 };
+
+// POST /api/users/avatar
+exports.uploadAvatar = async (req, res) => {
+    try {
+        if (!req.file) return res.status(400).json({ error: "No physical image binary was transmitted." });
+        const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { avatar: avatarUrl },
+            { returnDocument: 'after' }
+        ).select('-password');
+
+        res.json({ success: true, data: user, message: "Avatar securely mounted." });
+    } catch (err) {
+        console.error("Avatar Upload Error:", err);
+        res.status(500).json({ error: "Critical failure uploading avatar payload." });
+    }
+};
+
+// PUT /api/users/:id/target
+exports.updateTarget = async (req, res) => {
+    try {
+        if (req.user.role !== 'Admin' && req.user.role !== 'Owner') {
+            return res.status(403).json({ error: 'Strictly reserved for Admins' });
+        }
+        const { target } = req.body;
+        if (typeof target !== 'number') return res.status(400).json({ error: 'Target must be numeric' });
+
+        const user = await User.findByIdAndUpdate(req.params.id, { workTarget: target }, { returnDocument: 'after' }).select('-password');
+        res.json({ success: true, data: user });
+    } catch (err) {
+        res.status(500).json({ error: "Server error overriding structural arrays." });
+    }
+};

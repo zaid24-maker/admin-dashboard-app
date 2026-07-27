@@ -5,6 +5,7 @@ const { protect } = require('../middleware/authMiddleware');
 
 router.post('/:workflowId/run', protect, executionController.runWorkflow);
 router.get('/', protect, executionController.getExecutions);
+router.get('/operations', protect, executionController.getOperationsData);
 router.delete('/clear-all', protect, executionController.clearAllExecutions);
 router.get('/:id', protect, executionController.getExecutionById);
 router.delete('/:id', protect, executionController.deleteExecution);

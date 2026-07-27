@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Play, Trash2, Edit, X, Settings, Loader2, CheckCircle2 } from 'lucide-react';
+import { Plus, Play, Trash2, Edit, X, Settings, Loader2, CheckCircle2, Network } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Workflows = () => {
@@ -189,6 +189,7 @@ const Workflows = () => {
                                                         runningIds[flow._id] === 'queued' ? <CheckCircle2 size={18} /> :
                                                             <Play size={18} />}
                                                 </button>
+                                                <button onClick={() => navigate(`/workflows/${flow._id}/canvas`)} title="Open Visual Canvas" className="p-3 bg-slate-900/80 hover:bg-fuchsia-600 rounded-xl text-fuchsia-400 hover:text-white transition-all shadow-lg border border-slate-700/50 hover:border-transparent"><Network size={18} /></button>
                                                 <button onClick={() => openEditModal(flow)} className="p-3 bg-slate-900/80 hover:bg-indigo-600 rounded-xl text-indigo-400 hover:text-white transition-all shadow-lg border border-slate-700/50 hover:border-transparent"><Edit size={18} /></button>
                                                 <button onClick={() => handleDelete(flow._id)} className="p-3 bg-slate-900/80 hover:bg-rose-600 rounded-xl text-rose-400 hover:text-white transition-all shadow-lg border border-slate-700/50 hover:border-transparent"><Trash2 size={18} /></button>
                                             </div>
