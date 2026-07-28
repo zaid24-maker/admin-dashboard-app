@@ -137,28 +137,29 @@ const Login = () => {
                 <motion.div animate={{ scale: [1, 1.3, 1], x: [0, 100, 0], y: [0, 100, 0] }} transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }} className="absolute -bottom-[20%] left-[20%] w-[40vw] h-[40vw] rounded-full bg-blue-600/20 blur-[120px]" />
             </div>
 
-            <motion.div layout className="z-10 w-full max-w-[440px] p-10 space-y-8 bg-slate-900/60 backdrop-blur-3xl rounded-[2rem] border border-white/10 shadow-[0_0_80px_-15px_rgba(99,102,241,0.5)] relative overflow-hidden">
+            <motion.div layout className="z-10 w-full max-w-[400px] p-8 space-y-5 bg-slate-900/60 backdrop-blur-3xl rounded-2xl border border-white/10 shadow-[0_0_60px_-15px_rgba(99,102,241,0.5)] relative overflow-hidden">
                 {/* Logo */}
                 <motion.div layout className="text-center flex flex-col items-center">
-                    <motion.div layoutId="logo" className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(99,102,241,0.6)]">
-                        {authMode === 'otp-verify' ? <ShieldCheck size={32} className="text-white" /> : authMode === 'twfa-verify' ? <QrCode size={32} className="text-white" /> : <Workflow size={32} className="text-white" />}
+                    <motion.div layoutId="logo" className="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(99,102,241,0.5)]">
+                        {authMode === 'otp-verify' ? <ShieldCheck size={22} className="text-white" /> : authMode === 'twfa-verify' ? <QrCode size={22} className="text-white" /> : <Workflow size={22} className="text-white" />}
                     </motion.div>
-                    <motion.h2 layout className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-2 tracking-tight">
+                    <motion.h2 layout className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 tracking-tight">
                         {authMode === 'register' ? 'Create Account' : authMode === 'otp-verify' ? 'Secure OTP Login' : authMode === 'twfa-verify' ? 'Authenticator' : 'Welcome Back'}
                     </motion.h2>
+                    <p className="text-slate-500 text-xs mt-1 font-medium">AutoDash Control Panel</p>
                 </motion.div>
 
                 <AnimatePresence mode="wait">
                     {/* STANDARD LOGIN / REGISTER FORM */}
                     {(authMode === 'login' || authMode === 'register') && (
-                        <motion.form key="standard" variants={formVariants} initial="hidden" animate="visible" exit="exit" onSubmit={handleStandardSubmit} className="space-y-4">
+                        <motion.form key="standard" variants={formVariants} initial="hidden" animate="visible" exit="exit" onSubmit={handleStandardSubmit} className="space-y-3">
                             {authMode === 'register' && (
-                                <input type="text" placeholder="Display name" className="w-full bg-slate-950/50 border border-slate-700/50 text-white rounded-xl px-5 py-4 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium placeholder-slate-600" value={name} onChange={e => setName(e.target.value)} required />
+                                <input type="text" placeholder="Display name" className="w-full bg-slate-950/50 border border-slate-700/50 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium placeholder-slate-600" value={name} onChange={e => setName(e.target.value)} required />
                             )}
-                            <input type="email" placeholder="Email address" className="w-full bg-slate-950/50 border border-slate-700/50 text-white rounded-xl px-5 py-4 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium placeholder-slate-600" value={email} onChange={e => setEmail(e.target.value)} required />
-                            <input type="password" placeholder="Password" className="w-full bg-slate-950/50 border border-slate-700/50 text-white rounded-xl px-5 py-4 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium placeholder-slate-600" value={password} onChange={e => setPassword(e.target.value)} required />
+                            <input type="email" placeholder="Email address" className="w-full bg-slate-950/50 border border-slate-700/50 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium placeholder-slate-600" value={email} onChange={e => setEmail(e.target.value)} required />
+                            <input type="password" placeholder="Password" className="w-full bg-slate-950/50 border border-slate-700/50 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium placeholder-slate-600" value={password} onChange={e => setPassword(e.target.value)} required />
 
-                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading} className="w-full mt-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg text-lg flex items-center justify-center space-x-2">
+                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading} className="w-full mt-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg text-sm flex items-center justify-center space-x-2">
                                 <span>{loading ? 'Authenticating...' : authMode === 'register' ? 'Create Account' : 'Sign In'}</span>
                             </motion.button>
                         </motion.form>
@@ -166,59 +167,59 @@ const Login = () => {
 
                     {/* TWO-FACTOR TOTP VERIFICATION */}
                     {authMode === 'twfa-verify' && (
-                        <motion.form key="twfa-ver" variants={formVariants} initial="hidden" animate="visible" exit="exit" onSubmit={handleTwfaSubmit} className="space-y-4">
-                            <p className="text-slate-400 text-sm text-center mb-4">You have strict 2FA enabled. Enter the 6-digit code or a Backup Key to proceed.</p>
-                            <input type="text" placeholder="6-Digit TOTP" className="w-full text-center tracking-[0.3em] text-3xl font-mono bg-slate-950/50 border border-indigo-500/50 text-indigo-400 rounded-xl px-5 py-4 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition-all placeholder-indigo-900/20" value={otpCode} onChange={e => setOtpCode(e.target.value)} required />
+                        <motion.form key="twfa-ver" variants={formVariants} initial="hidden" animate="visible" exit="exit" onSubmit={handleTwfaSubmit} className="space-y-3">
+                            <p className="text-slate-400 text-xs text-center">2FA required. Enter the 6-digit TOTP or a Backup Key.</p>
+                            <input type="text" placeholder="000000" className="w-full text-center tracking-[0.4em] text-2xl font-mono bg-slate-950/50 border border-indigo-500/50 text-indigo-400 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition-all placeholder-indigo-900/20" value={otpCode} onChange={e => setOtpCode(e.target.value)} required />
 
-                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading} className="w-full mt-2 bg-indigo-600 text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] text-lg flex items-center justify-center space-x-2">
+                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading} className="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] text-sm flex items-center justify-center space-x-2">
                                 <span>{loading ? 'Authenticating...' : 'Verify Authenticator'}</span>
-                                <ShieldCheck size={18} />
+                                <ShieldCheck size={15} />
                             </motion.button>
                         </motion.form>
                     )}
 
                     {/* OTP EMAIL REQUEST FORM */}
                     {authMode === 'otp-request' && (
-                        <motion.form key="otp-req" variants={formVariants} initial="hidden" animate="visible" exit="exit" onSubmit={handleOtpRequest} className="space-y-4">
-                            <p className="text-slate-400 text-sm text-center mb-4">Enter your email or phone number. We will send you a 6-digit one-time password to log in without a password.</p>
-                            <input type="text" placeholder="Email or Phone Number" className="w-full bg-slate-950/50 border border-indigo-500/50 text-white rounded-xl px-5 py-4 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition-all font-medium placeholder-slate-500" value={email} onChange={e => setEmail(e.target.value)} required />
+                        <motion.form key="otp-req" variants={formVariants} initial="hidden" animate="visible" exit="exit" onSubmit={handleOtpRequest} className="space-y-3">
+                            <p className="text-slate-400 text-xs text-center">Enter your email. We'll send a 6-digit one-time code.</p>
+                            <input type="text" placeholder="Email address" className="w-full bg-slate-950/50 border border-indigo-500/50 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition-all font-medium placeholder-slate-500" value={email} onChange={e => setEmail(e.target.value)} required />
 
-                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading} className="w-full mt-2 bg-indigo-600 text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] text-lg flex items-center justify-center space-x-2">
+                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading} className="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] text-sm flex items-center justify-center space-x-2">
                                 <span>{loading ? 'Sending...' : 'Send Magic OTP'}</span>
-                                <Mail size={18} />
+                                <Mail size={15} />
                             </motion.button>
                         </motion.form>
                     )}
 
                     {/* OTP VERIFY 6-DIGIT CODE */}
                     {authMode === 'otp-verify' && (
-                        <motion.form key="otp-ver" variants={formVariants} initial="hidden" animate="visible" exit="exit" onSubmit={handleOtpVerify} className="space-y-4">
-                            <p className="text-slate-400 text-sm text-center mb-4">We sent a secure 6-digit code to <br /><span className="text-white font-bold">{email}</span></p>
-                            <input type="text" placeholder="Enter 6-Digit Code" maxLength="6" className="w-full text-center tracking-[0.5em] text-3xl font-mono bg-slate-950/50 border border-emerald-500/50 text-emerald-400 rounded-xl px-5 py-4 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-all placeholder-emerald-900/20" value={otpCode} onChange={e => setOtpCode(e.target.value.replace(/\D/g, ''))} required />
+                        <motion.form key="otp-ver" variants={formVariants} initial="hidden" animate="visible" exit="exit" onSubmit={handleOtpVerify} className="space-y-3">
+                            <p className="text-slate-400 text-xs text-center">Code sent to <span className="text-white font-bold">{email}</span></p>
+                            <input type="text" placeholder="000000" maxLength="6" className="w-full text-center tracking-[0.4em] text-2xl font-mono bg-slate-950/50 border border-emerald-500/50 text-emerald-400 rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-all placeholder-emerald-900/20" value={otpCode} onChange={e => setOtpCode(e.target.value.replace(/\D/g, ''))} required />
 
-                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading} className="w-full mt-2 bg-emerald-600 text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] text-lg flex items-center justify-center space-x-2">
+                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading} className="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] text-sm flex items-center justify-center space-x-2">
                                 <span>{loading ? 'Verifying...' : 'Verify & Login'}</span>
-                                <ShieldCheck size={18} />
+                                <ShieldCheck size={15} />
                             </motion.button>
                         </motion.form>
                     )}
                 </AnimatePresence>
 
                 {/* Switcher Footer */}
-                <motion.div layout className="pt-2 border-t border-white/5 space-y-3">
+                <motion.div layout className="pt-3 border-t border-white/5 space-y-2">
                     {authMode === 'login' && (
                         <>
-                            <button type="button" onClick={() => setAuthMode('otp-request')} className="w-full py-3 rounded-xl bg-slate-800 text-slate-300 font-bold hover:bg-slate-700 hover:text-white transition-all flex items-center justify-center space-x-2">
-                                <KeyRound size={16} /> <span>Login with OTP Email / SMS</span>
+                            <button type="button" onClick={() => setAuthMode('otp-request')} className="w-full py-2.5 rounded-xl bg-slate-800 text-slate-300 text-sm font-bold hover:bg-slate-700 hover:text-white transition-all flex items-center justify-center space-x-2">
+                                <KeyRound size={14} /> <span>Login with OTP Email</span>
                             </button>
-                            <p className="text-center text-slate-500 text-sm">Don't have an account? <button onClick={() => setAuthMode('register')} className="text-indigo-400 font-bold hover:text-indigo-300">Sign Up</button></p>
+                            <p className="text-center text-slate-500 text-xs">No account? <button onClick={() => setAuthMode('register')} className="text-indigo-400 font-bold hover:text-indigo-300">Sign Up</button></p>
                         </>
                     )}
                     {authMode === 'register' && (
-                        <p className="text-center text-slate-500 text-sm">Already have an account? <button onClick={() => setAuthMode('login')} className="text-indigo-400 font-bold hover:text-indigo-300">Sign In</button></p>
+                        <p className="text-center text-slate-500 text-xs">Already registered? <button onClick={() => setAuthMode('login')} className="text-indigo-400 font-bold hover:text-indigo-300">Sign In</button></p>
                     )}
                     {(authMode === 'otp-request' || authMode === 'otp-verify' || authMode === 'twfa-verify') && (
-                        <button type="button" onClick={() => { setAuthMode('login'); setTempUserId(null); }} className="w-full py-3 text-slate-400 font-bold hover:text-white transition-all text-sm flex items-center justify-center">
+                        <button type="button" onClick={() => { setAuthMode('login'); setTempUserId(null); }} className="w-full py-2 text-slate-400 font-semibold hover:text-white transition-all text-xs flex items-center justify-center">
                             ← Back to Password Login
                         </button>
                     )}

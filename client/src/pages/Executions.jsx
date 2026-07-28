@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Clock, CheckCircle2, XCircle, PlaySquare, Trash2, Eye, X, AlertTriangle } from 'lucide-react';
+import { Activity, Clock, CheckCircle2, XCircle, PlaySquare, Trash2, Eye, X, AlertTriangle, Loader2 } from 'lucide-react';
 
 const Executions = () => {
     const [executions, setExecutions] = useState([]);
@@ -71,7 +71,7 @@ const Executions = () => {
         <div className="space-y-6 pb-12">
             <div className="flex justify-between items-center bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-white mb-2">Execution Logs</h1>
+                    <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-2">Execution Logs</h1>
                     <p className="text-slate-400 text-sm">Monitor real-time workflow runs and audit history.</p>
                 </div>
                 {executions.length > 0 && (
@@ -104,7 +104,7 @@ const Executions = () => {
                     </thead>
                     <tbody className="divide-y divide-slate-700/50">
                         {loading ? (
-                            <tr><td colSpan="7" className="p-12 text-center text-slate-400">Loading...</td></tr>
+                            <tr><td colSpan="7" className="p-12 text-center"><div className="flex flex-col items-center justify-center text-indigo-400"><Loader2 className="animate-spin mb-3" size={28} /><span className="text-xs font-bold tracking-widest uppercase">LOADING...</span></div></td></tr>
                         ) : executions.length === 0 ? (
                             <tr>
                                 <td colSpan="7" className="p-12 text-center">

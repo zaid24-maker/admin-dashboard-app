@@ -121,20 +121,20 @@ const Schedules = () => {
 
     return (
         <div className="space-y-6 pb-12">
-            
+
 
             {/* Header */}
             <div className="flex justify-between items-center bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-white mb-1">Automation Scheduler</h1>
+                    <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-1">Automation Scheduler</h1>
                     <p className="text-slate-400 text-sm">Deploy recurring workflows on intelligent cron timers.</p>
                 </div>
                 <div className="flex items-center space-x-3">
                     <button
                         onClick={() => setCalendarView(!calendarView)}
                         className={`flex items-center space-x-2 py-3 px-5 rounded-xl font-bold border transition-all ${calendarView
-                                ? 'bg-indigo-600 text-white border-transparent'
-                                : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-indigo-500'
+                            ? 'bg-indigo-600 text-white border-transparent'
+                            : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-indigo-500'
                             }`}
                     >
                         <CalendarDays size={18} />
@@ -153,18 +153,18 @@ const Schedules = () => {
             {/* Stats Row */}
             <div className="grid grid-cols-3 gap-4">
                 {[
-                    { label: 'Total Schedules', value: schedules.length, icon: Clock, color: 'indigo' },
-                    { label: 'Active', value: schedules.filter(s => s.isActive).length, icon: Zap, color: 'emerald' },
-                    { label: 'Paused', value: schedules.filter(s => !s.isActive).length, icon: Power, color: 'rose' },
-                ].map(({ label, value, icon: Icon, color }) => (
+                    { label: 'Total Schedules', value: schedules.length, icon: Clock, bgColor: 'bg-indigo-500/10', textColor: 'text-indigo-400' },
+                    { label: 'Active', value: schedules.filter(s => s.isActive).length, icon: Zap, bgColor: 'bg-emerald-500/10', textColor: 'text-emerald-400' },
+                    { label: 'Paused', value: schedules.filter(s => !s.isActive).length, icon: Power, bgColor: 'bg-rose-500/10', textColor: 'text-rose-400' },
+                ].map(({ label, value, icon: Icon, bgColor, textColor }) => (
                     <motion.div
                         key={label}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className={`bg-slate-800 border border-slate-700 rounded-2xl p-5 flex items-center space-x-4`}
+                        className="bg-slate-800 border border-slate-700 rounded-2xl p-5 flex items-center space-x-4"
                     >
-                        <div className={`p-3 rounded-xl bg-${color}-500/10`}>
-                            <Icon size={22} className={`text-${color}-400`} />
+                        <div className={`p-3 rounded-xl ${bgColor}`}>
+                            <Icon size={22} className={textColor} />
                         </div>
                         <div>
                             <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider">{label}</p>
@@ -258,8 +258,8 @@ const Schedules = () => {
                                 </td>
                                 <td className="p-5">
                                     <span className={`inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-black uppercase border ${s.isActive
-                                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                                            : 'bg-slate-600/10 text-slate-500 border-slate-600/20'
+                                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                                        : 'bg-slate-600/10 text-slate-500 border-slate-600/20'
                                         }`}>
                                         <span className={`w-1.5 h-1.5 rounded-full ${s.isActive ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}`} />
                                         <span>{s.isActive ? 'Active' : 'Paused'}</span>
@@ -276,8 +276,8 @@ const Schedules = () => {
                                         <button
                                             onClick={() => handleToggle(s._id)}
                                             className={`p-2.5 rounded-xl transition-all border ${s.isActive
-                                                    ? 'bg-slate-700 hover:bg-yellow-600 text-yellow-400 hover:text-white border-slate-600'
-                                                    : 'bg-slate-700 hover:bg-emerald-600 text-emerald-400 hover:text-white border-slate-600'
+                                                ? 'bg-slate-700 hover:bg-yellow-600 text-yellow-400 hover:text-white border-slate-600'
+                                                : 'bg-slate-700 hover:bg-emerald-600 text-emerald-400 hover:text-white border-slate-600'
                                                 }`}
                                             title={s.isActive ? 'Pause' : 'Activate'}
                                         >
@@ -347,8 +347,8 @@ const Schedules = () => {
                                                 type="button"
                                                 onClick={() => setForm({ ...form, frequency: opt.value })}
                                                 className={`p-3 rounded-xl text-sm font-bold border transition-all text-left ${form.frequency === opt.value
-                                                        ? 'bg-indigo-600 text-white border-transparent shadow-lg shadow-indigo-500/20'
-                                                        : 'bg-slate-800 text-slate-400 border-slate-700 hover:border-indigo-500'
+                                                    ? 'bg-indigo-600 text-white border-transparent shadow-lg shadow-indigo-500/20'
+                                                    : 'bg-slate-800 text-slate-400 border-slate-700 hover:border-indigo-500'
                                                     }`}
                                             >
                                                 {opt.label}

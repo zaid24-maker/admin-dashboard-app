@@ -1,4 +1,34 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+* {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Premium Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
+
+/* Selection Highlight */
+::selection {
+    background: rgba(99, 102, 241, 0.3);
+    color: #e2e8f0;
+}
 
 html.light-mode {
     filter: invert(1) hue-rotate(180deg);
