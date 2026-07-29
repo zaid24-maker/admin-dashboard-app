@@ -15,7 +15,7 @@ const Workflows = () => {
     useEffect(() => {
         const fetchMe = async () => {
             try {
-                const res = await fetch('http://localhost:5001/api/users/me', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+                const res = await fetch(`${import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`}/api/users/me', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
                 const json = await res.json();
                 if (json.success) setUserRole(json.data.role);
             } catch (err) { }
@@ -27,7 +27,7 @@ const Workflows = () => {
     const fetchWorkflows = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('http://localhost:5001/api/workflows', {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`}/api/workflows', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -41,8 +41,8 @@ const Workflows = () => {
         e.preventDefault();
         const token = localStorage.getItem('token');
         const url = currentWorkflow
-            ? `http://localhost:5001/api/workflows/${currentWorkflow._id}`
-            : 'http://localhost:5001/api/workflows';
+            ? `${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}/api/workflows/${currentWorkflow._id}`
+            : `${import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`}/api/workflows';
 
         try {
             await fetch(url, {
@@ -65,7 +65,7 @@ const Workflows = () => {
         if (!window.confirm("Are you sure you want to completely delete this workflow?")) return;
         try {
             const token = localStorage.getItem('token');
-            await fetch(`http://localhost:5001/api/workflows/${id}`, {
+            await fetch(`${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}/api/workflows/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -91,7 +91,7 @@ const Workflows = () => {
         setRunningIds(prev => ({ ...prev, [flow._id]: 'running' }));
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:5001/api/executions/${flow._id}/run`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}/api/executions/${flow._id}/run`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

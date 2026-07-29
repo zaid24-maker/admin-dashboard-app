@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Activity, Server, Cpu, HardDrive, Clock, Zap, AlertTriangle, Loader2 } from 'lucide-react';
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:5001', { withCredentials: true });
+const socket = io((import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`), { withCredentials: true });
 
 const Diagnostics = () => {
     const [metrics, setMetrics] = useState(null);

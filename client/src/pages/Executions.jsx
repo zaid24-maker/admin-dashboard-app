@@ -16,7 +16,7 @@ const Executions = () => {
     const fetchExecutions = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('http://localhost:5001/api/executions', {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`}/api/executions', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -32,7 +32,7 @@ const Executions = () => {
         e.stopPropagation();
         if (!window.confirm("Delete this execution log?")) return;
         const token = localStorage.getItem('token');
-        await fetch(`http://localhost:5001/api/executions/${id}`, {
+        await fetch(`${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}/api/executions/${id}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -42,7 +42,7 @@ const Executions = () => {
     const handleClearAll = async () => {
         if (!window.confirm("Permanently clear ALL execution logs? This cannot be undone.")) return;
         const token = localStorage.getItem('token');
-        await fetch('http://localhost:5001/api/executions/clear-all', {
+        await fetch(`${import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`}/api/executions/clear-all', {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });

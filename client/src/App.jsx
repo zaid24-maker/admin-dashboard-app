@@ -16,7 +16,7 @@ import { io } from 'socket.io-client';
 
 const Canvas = lazy(() => import('./pages/Canvas'));
 
-const socket = io('http://localhost:5001', { withCredentials: true });
+const socket = io((import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`), { withCredentials: true });
 
 function App() {
   useEffect(() => {

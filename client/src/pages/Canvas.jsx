@@ -23,7 +23,7 @@ const Canvas = () => {
 
     const fetchWorkflow = async () => {
         try {
-            const res = await fetch(`http://localhost:5001/api/workflows/${id}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}/api/workflows/${id}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             const d = await res.json();
@@ -65,7 +65,7 @@ const Canvas = () => {
     const saveCoordinates = async (newPositions) => {
         setSaving(true);
         try {
-            await fetch(`http://localhost:5001/api/workflows/${id}`, {
+            await fetch(`${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}/api/workflows/${id}`, {
                 method: 'PUT',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,

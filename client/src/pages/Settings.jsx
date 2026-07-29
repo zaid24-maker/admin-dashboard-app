@@ -4,8 +4,8 @@ import { Toaster, toast } from 'react-hot-toast';
 import { User, Lock, Shield, Power, ChevronDown, Save, KeyRound, Users, Trash2, QrCode as QrCodeIcon, DownloadCloud } from 'lucide-react';
 
 const TOKEN = () => localStorage.getItem('token');
-const API = 'http://localhost:5001/api/users';
-const AUTH_API = 'http://localhost:5001/api/auth';
+const API = `${import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`}/api/users';
+const AUTH_API = `${import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`}/api/auth';
 
 const ROLES = ['Admin', 'Developer', 'Analyst', 'Tester', 'Viewer'];
 const ROLE_COLORS = {
@@ -145,7 +145,7 @@ const Settings = () => {
 
     const handleDeleteUser = async (userId) => {
         if (!window.confirm("CRITICAL WARNING: Are you sure you want to permanently obliterate this user account? This cannot be undone.")) return;
-        const res = await fetch(`http://localhost:5001/api/team/${userId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}/api/team/${userId}`, {
             method: 'DELETE',
             headers: { Authorization: `Bearer ${TOKEN()}` }
         });
@@ -162,7 +162,7 @@ const Settings = () => {
         e.preventDefault();
         setIsInviting(true);
         try {
-            const res = await fetch(`http://localhost:5001/api/team/invite`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}/api/team/invite`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${TOKEN()}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: inviteEmail, role: inviteRole })
@@ -188,7 +188,7 @@ const Settings = () => {
         formData.append('avatar', file);
 
         try {
-            const res = await fetch(`http://localhost:5001/api/users/avatar`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}/api/users/avatar`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${TOKEN()}` },
                 body: formData
@@ -247,7 +247,7 @@ const Settings = () => {
 
                                     <label className="relative group cursor-pointer block">
                                         {profile.avatar ? (
-                                            <img src={`http://localhost:5001${profile.avatar}`} className="w-16 h-16 rounded-2xl object-cover shadow-lg border border-slate-700" alt="Avatar" />
+                                            <img src={`${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}${profile.avatar}`} className="w-16 h-16 rounded-2xl object-cover shadow-lg border border-slate-700" alt="Avatar" />
                                         ) : (
                                             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white text-2xl font-black shadow-lg">
                                                 {profile.name?.[0]?.toUpperCase() || '?'}

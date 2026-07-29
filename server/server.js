@@ -10,7 +10,8 @@ const path = require('path');
 dotenv.config();
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+const clientOrigin = process.env.CLIENT_URL || 'http://localhost:5173';
+app.use(cors({ origin: clientOrigin, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -34,7 +35,7 @@ const { Server } = require("socket.io");
 
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors: { origin: 'http://localhost:5173', credentials: true }
+    cors: { origin: clientOrigin, credentials: true }
 });
 app.set('io', io); // Makes it globally accessible to controllers via req.app.get('io')
 
