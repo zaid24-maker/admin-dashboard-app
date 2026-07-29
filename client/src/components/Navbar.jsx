@@ -15,7 +15,7 @@ const Navbar = () => {
 
     const fetchMe = async () => {
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`}/api/users/me', {
+            const res = await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/users/me`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             const data = await res.json();
@@ -40,7 +40,7 @@ const Navbar = () => {
         // Load initial historical notifications
         const loadInitialNotifications = async () => {
             try {
-                const res = await fetch(`${import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`}/api/executions', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+                const res = await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/executions`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
                 const json = await res.json();
                 if (json.success && json.data) {
                     const mapped = json.data.slice(0, 10).map(e => ({
@@ -154,7 +154,7 @@ const Navbar = () => {
                         className="flex items-center space-x-2 bg-slate-700/50 hover:bg-slate-700 border border-slate-600 rounded-full pl-1 pr-3 py-1 transition-all"
                     >
                         {avatar ? (
-                            <img src={`${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}${avatar}`} alt="Avatar" className="h-7 w-7 rounded-full object-cover shadow-md border border-slate-500/50" />
+                            <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}${avatar}`} alt="Avatar" className="h-7 w-7 rounded-full object-cover shadow-md border border-slate-500/50" />
                         ) : (
                             <div className="h-7 w-7 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-xs shadow-md">
                                 {userName ? userName[0].toUpperCase() : <User size={14} />}

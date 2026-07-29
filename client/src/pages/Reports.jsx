@@ -8,7 +8,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import { FileDown, FileText, BarChart2, CheckCircle2, XCircle, Clock, Filter } from 'lucide-react';
 
 const TOKEN = () => localStorage.getItem('token');
-const API = `${import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`}/api/reports';
+const API = `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/reports`;
 const PIE_COLORS = ['#10b981', '#ef4444', '#3b82f6'];
 
 const StatCard = ({ label, value, icon: Icon, bgColor, textColor, sub }) => (

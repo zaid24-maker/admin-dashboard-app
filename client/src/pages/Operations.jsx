@@ -15,7 +15,7 @@ const Operations = () => {
 
     const fetchMyRole = async () => {
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`}/api/users/me', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+            const res = await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/users/me`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
             const d = await res.json();
             if (d.success) setMyRole(d.data.role);
         } catch (e) { }
@@ -23,7 +23,7 @@ const Operations = () => {
 
     const fetchOperations = async () => {
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`}/api/executions/operations', {
+            const res = await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/executions/operations`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
             const json = await res.json();
@@ -45,7 +45,7 @@ const Operations = () => {
         if (!newTarget || isNaN(newTarget)) return;
 
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}/api/users/${id}/target`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/users/${id}/target`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -108,7 +108,7 @@ const Operations = () => {
 
                                 <div className="flex space-x-4 items-center">
                                     {user.avatar ? (
-                                        <img src={`${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}${user.avatar}`} className="w-14 h-14 rounded-full object-cover border-2 border-slate-700 shadow-md" />
+                                        <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}${user.avatar}`} className="w-14 h-14 rounded-full object-cover border-2 border-slate-700 shadow-md" />
                                     ) : (
                                         <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 flex justify-center items-center font-black text-white text-xl shadow-md border-2 border-slate-700">
                                             {user.name?.[0]?.toUpperCase()}

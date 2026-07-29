@@ -21,7 +21,7 @@ const DataUpload = () => {
     const fetchFiles = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`}/api/files', {
+            const res = await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/files`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -37,7 +37,7 @@ const DataUpload = () => {
         if (!window.confirm("Are you sure you intentionally want to permanently delete this file and its metadata?")) return;
         try {
             const token = localStorage.getItem('token');
-            await fetch(`${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}/api/files/${id}`, {
+            await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/files/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -52,7 +52,7 @@ const DataUpload = () => {
         if (!editingFile) return;
         try {
             const token = localStorage.getItem('token');
-            await fetch(`${import.meta.env.VITE_API_URL || (import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`)}/api/files/${editingFile._id}`, {
+            await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/files/${editingFile._id}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -107,7 +107,7 @@ const DataUpload = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`${import.meta.env.VITE_API_URL || `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}`}/api/files/upload', {
+            const res = await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/files/upload`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
