@@ -21,7 +21,7 @@ const DataUpload = () => {
     const fetchFiles = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/files`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/files`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -107,7 +107,7 @@ const DataUpload = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/files/upload`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/files/upload`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

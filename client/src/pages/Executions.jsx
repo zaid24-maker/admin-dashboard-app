@@ -16,7 +16,7 @@ const Executions = () => {
     const fetchExecutions = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/executions`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/executions`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -42,7 +42,7 @@ const Executions = () => {
     const handleClearAll = async () => {
         if (!window.confirm("Permanently clear ALL execution logs? This cannot be undone.")) return;
         const token = localStorage.getItem('token');
-        await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/executions/clear-all`, {
+        await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/executions/clear-all`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });

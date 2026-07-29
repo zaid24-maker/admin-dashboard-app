@@ -44,7 +44,7 @@ const Schedules = () => {
 
     const fetchSchedules = async () => {
         try {
-            const res = await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/schedules`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/schedules`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
             const data = await res.json();
@@ -54,7 +54,7 @@ const Schedules = () => {
 
     const fetchWorkflows = async () => {
         try {
-            const res = await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/workflows`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/workflows`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
             const data = await res.json();
@@ -65,7 +65,7 @@ const Schedules = () => {
     const handleCreate = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/schedules`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/schedules`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,

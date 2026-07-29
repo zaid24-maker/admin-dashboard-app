@@ -43,8 +43,8 @@ const Dashboard = () => {
             try {
                 const token = localStorage.getItem('token');
                 const [statRes, flowRes] = await Promise.all([
-                    fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/workflows/stats`, { headers: { 'Authorization': `Bearer ${token}` } }),
-                    fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/workflows`, { headers: { 'Authorization': `Bearer ${token}` } })
+                    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/workflows/stats`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/workflows`, { headers: { 'Authorization': `Bearer ${token}` } })
                 ]);
                 const statJson = await statRes.json();
                 const flowJson = await flowRes.json();

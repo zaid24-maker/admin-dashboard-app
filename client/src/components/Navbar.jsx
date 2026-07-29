@@ -15,7 +15,7 @@ const Navbar = () => {
 
     const fetchMe = async () => {
         try {
-            const res = await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/users/me`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/users/me`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             const data = await res.json();
@@ -40,7 +40,7 @@ const Navbar = () => {
         // Load initial historical notifications
         const loadInitialNotifications = async () => {
             try {
-                const res = await fetch(`\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/executions`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+                const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/executions`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
                 const json = await res.json();
                 if (json.success && json.data) {
                     const mapped = json.data.slice(0, 10).map(e => ({

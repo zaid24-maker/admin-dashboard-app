@@ -4,8 +4,8 @@ import { Toaster, toast } from 'react-hot-toast';
 import { User, Lock, Shield, Power, ChevronDown, Save, KeyRound, Users, Trash2, QrCode as QrCodeIcon, DownloadCloud } from 'lucide-react';
 
 const TOKEN = () => localStorage.getItem('token');
-const API = `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/users`;
-const AUTH_API = `\${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/auth`;
+const API = `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/users`;
+const AUTH_API = `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/auth`;
 
 const ROLES = ['Admin', 'Developer', 'Analyst', 'Tester', 'Viewer'];
 const ROLE_COLORS = {
