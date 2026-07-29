@@ -11,7 +11,18 @@ dotenv.config();
 
 const app = express();
 const clientOrigin = process.env.CLIENT_URL || 'http://localhost:5173';
-app.use(cors({ origin: clientOrigin, credentials: true }));
+const corsOptions = {
+    origin: (origin, callback) => {
+        // Allow Vercel deployments, localhost, and exact configured origins
+        if (!origin || origin.includes('vercel.app') || origin === clientOrigin || origin.startsWith('http://localhost:')) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -35,7 +46,7 @@ const { Server } = require("socket.io");
 
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors: { origin: clientOrigin, credentials: true }
+    cors: corsOptions
 });
 app.set('io', io); // Makes it globally accessible to controllers via req.app.get('io')
 
