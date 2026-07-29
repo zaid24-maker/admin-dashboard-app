@@ -130,9 +130,6 @@ const Login = () => {
 
     return (
         <div className="flex h-screen w-full items-center justify-center bg-slate-950 overflow-hidden relative">
-            <div className="absolute top-4 right-4 bg-black/80 text-green-400 font-mono p-3 rounded text-xs z-50 border border-green-500/30">
-                ACTIVE API: {import.meta.env.VITE_API_URL || 'http://localhost:5001'}
-            </div>
             {/* Animated Plasma Background */}
             <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
                 <motion.div animate={{ scale: [1, 1.2, 1], x: [0, 150, 0], y: [0, -100, 0] }} transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }} className="absolute -top-[20%] -left-[10%] w-[60vw] h-[60vw] rounded-full bg-indigo-600/20 blur-[140px]" />
