@@ -113,7 +113,7 @@ const Workflows = () => {
 
     return (
         <div className="space-y-6 pb-12">
-            <div className="flex justify-between items-center bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+            <div className="flex justify-between items-center bg-background/80 backdrop-blur-sm p-6 rounded-2xl border border-border">
                 <div>
                     <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-2">Workflow Management</h1>
                     <p className="text-slate-400 text-sm font-medium tracking-wide">Create, configure, and seamlessly orchestrate all of your automation pipelines.</p>
@@ -133,7 +133,7 @@ const Workflows = () => {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-slate-800 border border-slate-700 rounded-2xl shadow-xl overflow-hidden relative"
+                className="bg-background/80 backdrop-blur-md border border-border rounded-2xl shadow-md overflow-hidden relative"
             >
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
@@ -213,14 +213,14 @@ const Workflows = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-background/60 backdrop-blur-md p-4"
                     >
                         <motion.div
                             initial={{ scale: 0.9, y: 30, rotateX: 10 }}
                             animate={{ scale: 1, y: 0, rotateX: 0 }}
                             exit={{ scale: 0.9, y: 30, opacity: 0 }}
                             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                            className="bg-slate-900 border border-slate-700 rounded-3xl shadow-[0_0_80px_-15px_rgba(99,102,241,0.4)] w-full max-w-lg overflow-hidden relative"
+                            className="bg-background border border-border rounded-3xl shadow-xl w-full max-w-lg overflow-hidden relative"
                         >
                             <div className="absolute -top-32 -right-32 w-64 h-64 bg-indigo-600/20 blur-[100px] rounded-full pointer-events-none"></div>
 

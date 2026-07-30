@@ -124,7 +124,7 @@ const Schedules = () => {
 
 
             {/* Header */}
-            <div className="flex justify-between items-center bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+            <div className="flex justify-between items-center bg-background/80 backdrop-blur-sm p-6 rounded-2xl border border-border">
                 <div>
                     <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-1">Automation Scheduler</h1>
                     <p className="text-slate-400 text-sm">Deploy recurring workflows on intelligent cron timers.</p>
@@ -161,7 +161,7 @@ const Schedules = () => {
                         key={label}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-slate-800 border border-slate-700 rounded-2xl p-5 flex items-center space-x-4"
+                        className="bg-background/80 backdrop-blur-md border border-border rounded-2xl p-5 flex items-center space-x-4"
                     >
                         <div className={`p-3 rounded-xl ${bgColor}`}>
                             <Icon size={22} className={textColor} />
@@ -181,7 +181,7 @@ const Schedules = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden p-4"
+                        className="bg-background border border-border rounded-2xl overflow-hidden p-4"
                         style={{ '--rbc-today-bg': 'rgba(99,102,241,0.1)' }}
                     >
                         <style>{`
@@ -218,7 +218,7 @@ const Schedules = () => {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden"
+                className="bg-background/80 backdrop-blur-md border border-border rounded-2xl overflow-hidden"
             >
                 <table className="w-full text-left">
                     <thead>
@@ -304,7 +304,7 @@ const Schedules = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-background/60 backdrop-blur-md p-4"
                         onClick={() => setIsModalOpen(false)}
                     >
                         <motion.div
@@ -312,7 +312,7 @@ const Schedules = () => {
                             animate={{ scale: 1, y: 0 }}
                             exit={{ scale: 0.9, y: 30 }}
                             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                            className="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden"
+                            className="bg-background border border-border rounded-3xl shadow-xl w-full max-w-md overflow-hidden"
                             onClick={e => e.stopPropagation()}
                         >
                             <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-gradient-to-r from-slate-900 to-slate-800">

@@ -3,13 +3,14 @@ import { motion } from 'framer-motion';
 import { Activity, CheckCircle, Clock, AlertTriangle, Play, Pause, Trash2, Loader2, TrendingUp, BarChart3, Server, Cpu, HardDrive } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { io } from 'socket.io-client';
+import PageWrapper from '../components/PageWrapper';
 
 const StatCard = ({ title, value, subtitle, icon: Icon, color, gradient, delay }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay }}
-        className="bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 p-6 rounded-2xl shadow-xl relative overflow-hidden group hover:border-slate-600 hover:shadow-2xl transition-all duration-300 cursor-default"
+        className="bg-background/80 backdrop-blur-md border border-border p-6 rounded-2xl shadow-md relative overflow-hidden group hover:border-primary/50 hover:shadow-lg transition-all duration-300 cursor-default"
     >
         <div className={`absolute -right-8 -top-8 w-32 h-32 rounded-full bg-gradient-to-br ${gradient} opacity-10 blur-2xl group-hover:opacity-20 transition-opacity duration-500`}></div>
         <div className="flex justify-between items-start relative z-10">
@@ -75,9 +76,9 @@ const Dashboard = () => {
     if (loading) return <div className="h-[calc(100vh-64px)] w-full flex flex-col items-center justify-center bg-transparent text-indigo-400 font-bold tracking-widest text-xs uppercase"><Loader2 className="animate-spin mb-3" size={32} /> LOADING...</div>;
 
     return (
-        <div className="space-y-8 pb-12">
+        <PageWrapper className="space-y-8 pb-12">
             {/* Hero Header */}
-            <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8 rounded-3xl border border-slate-700/50 shadow-2xl relative overflow-hidden group">
+            <div className="bg-gradient-to-br from-background via-background to-muted p-8 rounded-3xl border border-border shadow-xl relative overflow-hidden group">
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none group-hover:bg-indigo-600/20 transition-all duration-1000"></div>
                 <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-purple-600/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-purple-600/20 transition-all duration-1000"></div>
                 <div className="relative z-10">
@@ -265,7 +266,7 @@ const Dashboard = () => {
                     </table>
                 </div>
             </motion.div>
-        </div>
+        </PageWrapper>
     );
 };
 

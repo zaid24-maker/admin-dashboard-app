@@ -139,7 +139,7 @@ const DataUpload = () => {
 
     return (
         <div className="space-y-6 pb-12">
-            <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+            <div className="bg-background/80 backdrop-blur-sm p-6 rounded-2xl border border-border">
                 <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400 mb-2">Data Upload Center</h1>
                 <p className="text-slate-400 text-sm font-medium tracking-wide">Securely import massive external datasets, CSVs, and logs directly into your Node backend.</p>
             </div>
@@ -150,7 +150,7 @@ const DataUpload = () => {
                 className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8"
             >
                 {/* Upload Zone */}
-                <div className="bg-slate-800 border border-slate-700 rounded-3xl p-8 shadow-[0_0_40px_-15px_rgba(16,185,129,0.3)] relative overflow-hidden">
+                <div className="bg-background/80 backdrop-blur-md border border-border rounded-3xl p-8 shadow-md relative overflow-hidden">
                     <div className="absolute -top-32 -left-32 w-64 h-64 bg-emerald-600/10 blur-[100px] rounded-full pointer-events-none"></div>
                     <h2 className="text-xl font-bold text-slate-200 mb-6">Upload Dataset</h2>
 
@@ -223,7 +223,7 @@ const DataUpload = () => {
                 </div>
 
                 {/* File History Table */}
-                <div className="bg-slate-800 border border-slate-700 rounded-3xl shadow-xl overflow-hidden flex flex-col h-[500px]">
+                <div className="bg-background/80 backdrop-blur-md border border-border rounded-3xl shadow-lg overflow-hidden flex flex-col h-[500px]">
                     <div className="p-6 border-b border-slate-700 bg-gradient-to-r from-slate-900/50 to-slate-800/20">
                         <h2 className="text-xl font-bold text-slate-200">Processing History</h2>
                     </div>

@@ -115,8 +115,8 @@ const Canvas = () => {
     if (loading) return <div className="h-[calc(100vh-64px)] w-full flex items-center justify-center bg-transparent text-white font-bold tracking-widest text-xs uppercase animate-pulse">Initializing Graphical Canvas...</div>;
 
     return (
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="h-full w-full flex flex-col bg-slate-950 rounded-xl overflow-hidden shadow-2xl border border-slate-700/50">
-            <div className="flex justify-between items-center p-4 bg-slate-900 border-b border-slate-800">
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="h-full w-full flex flex-col bg-background rounded-xl overflow-hidden shadow-2xl border border-border">
+            <div className="flex justify-between items-center p-4 bg-background/80 backdrop-blur-md border-b border-border">
                 <div className="flex items-center space-x-4">
                     <button onClick={() => navigate('/workflows')} className="p-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition">
                         <ArrowLeft size={16} className="text-slate-300" />
@@ -143,7 +143,7 @@ const Canvas = () => {
                     onEdgesChange={onEdgesChange}
                     fitView
                     proOptions={{ hideAttribution: true }}
-                    className="bg-slate-950"
+                    className="bg-background"
                 >
                     <Background color="#334155" gap={20} size={1} />
                 </ReactFlow>

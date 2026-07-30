@@ -212,21 +212,21 @@ const Settings = () => {
         { id: 'users', label: 'User Management', icon: Users },
     ];
 
-    const inputClass = "w-full bg-slate-950 border border-slate-800 text-white rounded-xl px-4 py-3.5 focus:outline-none focus:border-indigo-500 transition-all font-medium placeholder-slate-700";
+    const inputClass = "w-full bg-background border border-border text-foreground rounded-xl px-4 py-3.5 focus:outline-none focus:border-primary transition-all font-medium placeholder-muted-foreground";
 
     return (
         <div className="space-y-6 pb-12">
 
 
             {/* Header */}
-            <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+            <div className="bg-background/80 backdrop-blur-sm p-6 rounded-2xl border border-border">
                 <h1 className="text-3xl font-extrabold text-white mb-1">Settings</h1>
                 <p className="text-slate-400 text-sm">Manage your profile, security constraints, and team members.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 {/* Sidebar Tabs */}
-                <div className="bg-slate-800 border border-slate-700 rounded-2xl p-3 h-fit space-y-1">
+                <div className="bg-background/80 backdrop-blur-md border border-border rounded-2xl p-3 h-fit space-y-1">
                     {TABS.map(({ id, label, icon: Icon }) => (
                         <button key={id} onClick={() => setTab(id)}
                             className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${tab === id ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-700 hover:text-white'}`}>
@@ -242,7 +242,7 @@ const Settings = () => {
                         {/* ── Profile Tab ── */}
                         {tab === 'profile' && (
                             <motion.div key="profile" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
-                                className="bg-slate-800 border border-slate-700 rounded-2xl p-8 space-y-6">
+                                className="bg-background/80 backdrop-blur-md border border-border rounded-2xl p-8 space-y-6">
                                 <div className="flex items-center space-x-5">
 
                                     <label className="relative group cursor-pointer block">
@@ -299,7 +299,7 @@ const Settings = () => {
                                 className="space-y-6">
 
                                 {/* 2FA Authenticator Section */}
-                                <div className="bg-slate-800 border border-slate-700 rounded-2xl p-8">
+                                <div className="bg-background/80 backdrop-blur-md border border-border rounded-2xl p-8">
                                     <div className="flex items-center space-x-3 mb-6">
                                         <div className="p-3 bg-emerald-500/10 rounded-xl"><QrCodeIcon size={22} className="text-emerald-400" /></div>
                                         <div>
@@ -346,7 +346,7 @@ const Settings = () => {
                                 </div>
 
                                 {/* Change Password Section */}
-                                <div className="bg-slate-800 border border-slate-700 rounded-2xl p-8 space-y-6">
+                                <div className="bg-background/80 backdrop-blur-md border border-border rounded-2xl p-8 space-y-6">
                                     <div className="flex items-center space-x-3">
                                         <div className="p-3 bg-rose-500/10 rounded-xl"><KeyRound size={22} className="text-rose-400" /></div>
                                         <div>
@@ -380,7 +380,7 @@ const Settings = () => {
                         {/* ── Users Tab ── */}
                         {tab === 'users' && (
                             <motion.div key="users" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
-                                className="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden">
+                                className="bg-background/80 backdrop-blur-md border border-border rounded-2xl overflow-hidden">
                                 <div className="p-6 border-b border-slate-700 flex justify-between items-center bg-slate-900/40">
                                     <div>
                                         <p className="font-bold text-white text-lg">Team Members</p>

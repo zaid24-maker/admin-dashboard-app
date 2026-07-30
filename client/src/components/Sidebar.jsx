@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Workflow, Activity, Settings, ChevronLeft, ChevronRight, PlaySquare, CalendarDays, BarChart2, Target, Server, UploadCloud } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { hoverVariants } from '../utils/motion';
+
+const MotionLink = motion.create(Link);
 
 const Sidebar = () => {
     const location = useLocation();
@@ -22,11 +25,11 @@ const Sidebar = () => {
     return (
         <motion.aside
             animate={{ width: isExpanded ? 260 : 80 }}
-            className="bg-slate-800/95 backdrop-blur-md border-r border-slate-700/50 h-full flex flex-col hidden md:flex relative"
+            className="bg-background/80 backdrop-blur-md border-r border-border h-full flex flex-col hidden md:flex relative"
         >
             <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="absolute -right-3 top-6 bg-indigo-600 hover:bg-indigo-500 rounded-full p-1.5 text-white shadow-lg shadow-indigo-900/50 z-50 flex items-center justify-center transition-colors"
+                className="absolute -right-3 top-6 bg-primary hover:opacity-90 rounded-full p-1.5 text-on-primary shadow-md z-50 flex items-center justify-center transition-colors"
             >
                 {isExpanded ? <ChevronLeft size={14} /> : <ChevronRight size={14} />}
             </button>
@@ -50,10 +53,13 @@ const Sidebar = () => {
                     const isActive = location.pathname === item.path;
 
                     return (
-                        <Link
+                        <MotionLink
                             key={item.name}
                             to={item.path}
                             title={!isExpanded ? item.name : undefined}
+                            variants={hoverVariants}
+                            whileHover="hover"
+                            whileTap="tap"
                             className={`flex items-center px-3 py-2.5 rounded-xl transition-all duration-200 group relative ${isActive
                                 ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-900/40'
                                 : 'text-slate-400 hover:bg-slate-700/40 hover:text-slate-100'
@@ -70,7 +76,7 @@ const Sidebar = () => {
                                     {item.name}
                                 </div>
                             )}
-                        </Link>
+                        </MotionLink>
                     );
                 })}
             </nav>

@@ -69,7 +69,7 @@ const Executions = () => {
 
     return (
         <div className="space-y-6 pb-12">
-            <div className="flex justify-between items-center bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+            <div className="flex justify-between items-center bg-background/80 backdrop-blur-sm p-6 rounded-2xl border border-border">
                 <div>
                     <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-2">Execution Logs</h1>
                     <p className="text-slate-400 text-sm">Monitor real-time workflow runs and audit history.</p>
@@ -88,7 +88,7 @@ const Executions = () => {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-slate-800 border border-slate-700 rounded-2xl shadow-xl overflow-x-auto"
+                className="bg-background/80 backdrop-blur-md border border-border rounded-2xl shadow-md overflow-x-auto"
             >
                 <table className="w-full text-left border-collapse">
                     <thead>
@@ -155,14 +155,14 @@ const Executions = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-background/60 backdrop-blur-md p-4"
                         onClick={() => setSelectedExec(null)}
                     >
                         <motion.div
                             initial={{ scale: 0.95, y: 20 }}
                             animate={{ scale: 1, y: 0 }}
                             exit={{ scale: 0.95, y: 20 }}
-                            className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-lg"
+                            className="bg-background border border-border rounded-2xl shadow-xl w-full max-w-lg relative overflow-hidden"
                             onClick={e => e.stopPropagation()}
                         >
                             <div className="p-5 border-b border-slate-800 flex justify-between items-center">

@@ -6,6 +6,7 @@ import {
 } from 'recharts';
 import { Toaster, toast } from 'react-hot-toast';
 import { FileDown, FileText, BarChart2, CheckCircle2, XCircle, Clock, Filter } from 'lucide-react';
+import PageWrapper from '../components/PageWrapper';
 
 const TOKEN = () => localStorage.getItem('token');
 const API = `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/reports`;
@@ -14,7 +15,7 @@ const PIE_COLORS = ['#10b981', '#ef4444', '#3b82f6'];
 const StatCard = ({ label, value, icon: Icon, bgColor, textColor, sub }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-        className="bg-slate-800 border border-slate-700 rounded-2xl p-5 flex items-center space-x-4"
+        className="bg-background/80 backdrop-blur-md border border-border rounded-2xl p-5 flex items-center space-x-4"
     >
         <div className={`p-3 rounded-xl ${bgColor}`}>
             <Icon size={22} className={textColor} />
@@ -76,11 +77,10 @@ const Reports = () => {
     ].filter(d => d.value > 0) : [];
 
     return (
-        <div className="space-y-6 pb-12">
-
+        <PageWrapper className="space-y-6 pb-12">
 
             {/* Header */}
-            <div className="flex flex-wrap justify-between items-center gap-4 bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+            <div className="flex flex-wrap justify-between items-center gap-4 bg-background/80 backdrop-blur-sm p-6 rounded-2xl border border-border">
                 <div>
                     <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-1">Execution Reports</h1>
                     <p className="text-slate-400 text-sm">Analyze trends, filter by date, and export your data.</p>
@@ -98,7 +98,7 @@ const Reports = () => {
             </div>
 
             {/* Filters */}
-            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-5 flex flex-wrap gap-4 items-end">
+            <div className="bg-background/80 backdrop-blur-md border border-border rounded-2xl p-5 flex flex-wrap gap-4 items-end">
                 <div>
                     <label className="block text-xs font-bold uppercase text-slate-500 mb-1.5">Status</label>
                     <select value={filters.status} onChange={e => setFilters({ ...filters, status: e.target.value })}
@@ -148,7 +148,7 @@ const Reports = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* Area Chart — 7-day trend */}
                         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                            className="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-2xl p-6">
+                            className="lg:col-span-2 bg-background border border-border rounded-2xl p-6">
                             <h2 className="text-lg font-bold text-slate-200 mb-5">7-Day Execution Trend</h2>
                             <ResponsiveContainer width="100%" height={240}>
                                 <AreaChart data={data.trend}>
@@ -175,7 +175,7 @@ const Reports = () => {
 
                         {/* Pie Chart — breakdown */}
                         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                            className="bg-slate-800 border border-slate-700 rounded-2xl p-6">
+                            className="bg-background/80 backdrop-blur-md border border-border rounded-2xl p-6">
                             <h2 className="text-lg font-bold text-slate-200 mb-5">Status Breakdown</h2>
                             {pieData.length > 0 ? (
                                 <ResponsiveContainer width="100%" height={240}>
@@ -202,7 +202,7 @@ const Reports = () => {
 
                     {/* Bar Chart — daily total */}
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                        className="bg-slate-800 border border-slate-700 rounded-2xl p-6">
+                        className="bg-background/80 backdrop-blur-md border border-border rounded-2xl p-6">
                         <h2 className="text-lg font-bold text-slate-200 mb-5">Daily Volume (Last 7 Days)</h2>
                         <ResponsiveContainer width="100%" height={200}>
                             <BarChart data={data.trend} barSize={28}>
@@ -217,7 +217,7 @@ const Reports = () => {
                     </motion.div>
                 </>
             )}
-        </div>
+        </PageWrapper>
     );
 };
 

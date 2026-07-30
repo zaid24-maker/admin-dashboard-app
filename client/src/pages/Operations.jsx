@@ -72,7 +72,7 @@ const Operations = () => {
         <div className="space-y-6 pb-12">
 
             {/* Header */}
-            <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 flex justify-between items-center shadow-lg">
+            <div className="bg-background/80 backdrop-blur-sm p-6 rounded-2xl border border-border flex justify-between items-center shadow-lg">
                 <div>
                     <h1 className="text-3xl font-extrabold text-white mb-1 tracking-tight flex items-center space-x-3">
                         <Target className="text-indigo-500" size={32} />
@@ -101,7 +101,7 @@ const Operations = () => {
                         const isDone = progress >= 100;
                         return (
                             <motion.div key={user._id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }}
-                                className={`bg-slate-800 border ${isDone ? 'border-emerald-500/50 shadow-emerald-900/20' : 'border-slate-700'} rounded-2xl p-5 shadow-lg relative overflow-hidden group`}>
+                                className={`bg-background/80 backdrop-blur-md border ${isDone ? 'border-emerald-500/50 shadow-emerald-900/20' : 'border-border'} rounded-2xl p-5 shadow-lg relative overflow-hidden group`}>
 
                                 {/* Background Sync Pulse indicator */}
                                 {isDone && <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full" />}
@@ -150,7 +150,7 @@ const Operations = () => {
 
             {/* Global Feed */}
             <h2 className="text-xl font-bold text-slate-200 mt-10 mb-4 px-2">Global Live Feed</h2>
-            <div className="bg-slate-800 border border-slate-700 rounded-2xl shadow-xl overflow-hidden">
+            <div className="bg-background/80 backdrop-blur-md border border-border rounded-2xl shadow-xl overflow-hidden">
                 <div className="max-h-[500px] overflow-y-auto">
                     {feed?.map((action, i) => (
                         <div key={action?._id || i} className={`p-4 flex items-center justify-between transition-colors hover:bg-slate-700/30 ${i !== (feed?.length || 1) - 1 ? 'border-b border-slate-700/50' : ''}`}>
