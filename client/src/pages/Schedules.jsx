@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay, addDays, addWeeks, addMonths } from 'date-fns';
 import { enUS } from 'date-fns/locale';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { Plus, X, Power, Trash2, Clock, CalendarDays, Zap } from 'lucide-react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 

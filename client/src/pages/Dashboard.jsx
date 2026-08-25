@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Activity, CheckCircle, Clock, AlertTriangle, Play, Pause, Trash2, Loader2, TrendingUp, BarChart3, Server, Cpu, HardDrive } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { io } from 'socket.io-client';
 import PageWrapper from '../components/PageWrapper';
 
-const StatCard = ({ title, value, subtitle, icon: Icon, color, gradient, delay }) => (
+const StatCard = ({ title, value, subtitle, icon: Icon, gradient, delay }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

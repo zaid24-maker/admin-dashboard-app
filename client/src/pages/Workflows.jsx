@@ -18,7 +18,7 @@ const Workflows = () => {
                 const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/users/me`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
                 const json = await res.json();
                 if (json.success) setUserRole(json.data.role);
-            } catch (err) { }
+            } catch { }
         };
         fetchMe();
         fetchWorkflows();

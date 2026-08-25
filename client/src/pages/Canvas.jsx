@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ReactFlow, Controls, Background, applyNodeChanges, applyEdgeChanges } from '@xyflow/react';
+import { ReactFlow, Background, applyNodeChanges, applyEdgeChanges } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -17,11 +17,7 @@ const Canvas = () => {
 
     const debounceTimer = useRef(null);
 
-    useEffect(() => {
-        fetchWorkflow();
-    }, [id]);
-
-    const fetchWorkflow = async () => {
+    const fetchWorkflow = useCallback(async () => {
         try {
             const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/workflows/${id}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
@@ -55,14 +51,14 @@ const Canvas = () => {
                 setNodes(initialNodes);
                 setEdges(initialEdges);
             }
-        } catch (e) {
+        } catch {
             toast.error("Failed to load workflow canvas");
         } finally {
             setLoading(false);
         }
-    };
+    }, [id]);
 
-    const saveCoordinates = async (newPositions) => {
+    const saveCoordinates = useCallback(async (newPositions) => {
         setSaving(true);
         try {
             await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/workflows/${id}`, {
@@ -78,7 +74,11 @@ const Canvas = () => {
         } finally {
             setSaving(false);
         }
-    };
+    }, [id]);
+
+    useEffect(() => {
+        fetchWorkflow();
+    }, [fetchWorkflow]);
 
     const onNodesChange = useCallback(
         (changes) => {
@@ -104,7 +104,7 @@ const Canvas = () => {
                 return newNodes;
             });
         },
-        [id]
+        [saveCoordinates]
     );
 
     const onEdgesChange = useCallback(

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Target, Activity, CheckCircle, Clock, Zap, User, Edit2, Loader2 } from 'lucide-react';
+import { Target, Activity, CheckCircle, Clock, Zap, Edit2, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 
@@ -18,7 +18,7 @@ const Operations = () => {
             const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/users/me`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
             const d = await res.json();
             if (d.success) setMyRole(d.data.role);
-        } catch (e) { }
+        } catch { }
     }
 
     const fetchOperations = async () => {
@@ -33,7 +33,7 @@ const Operations = () => {
             } else {
                 toast.error("Failed to fetch operations layout.");
             }
-        } catch (err) {
+        } catch {
             toast.error("Network communication failed.");
         } finally {
             setLoading(false);
@@ -60,7 +60,7 @@ const Operations = () => {
             } else {
                 toast.error(data.error || "Permission heavily denied.");
             }
-        } catch (e) { toast.error("Transmission to central core failed."); }
+        } catch { toast.error("Transmission to central core failed."); }
     }
 
     if (loading) return <div className="h-[calc(100vh-64px)] w-full flex flex-col items-center justify-center bg-transparent text-indigo-400 font-bold tracking-widest text-xs uppercase"><Loader2 className="animate-spin mb-3" size={32} /> LOADING...</div>;

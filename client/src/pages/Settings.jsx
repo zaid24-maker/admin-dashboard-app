@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Toaster, toast } from 'react-hot-toast';
-import { User, Lock, Shield, Power, ChevronDown, Save, KeyRound, Users, Trash2, QrCode as QrCodeIcon, DownloadCloud } from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import { User, Lock, Shield, ShieldCheck, Power, ChevronDown, Save, KeyRound, Users, Trash2, QrCode as QrCodeIcon, DownloadCloud } from 'lucide-react';
 
 const TOKEN = () => localStorage.getItem('token');
 const API = `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/users`;
@@ -34,7 +34,6 @@ const Settings = () => {
 
     // 2FA Specific State
     const [qrCode, setQrCode] = useState(null);
-    const [backupKeys, setBackupKeys] = useState([]);
     const [authCode, setAuthCode] = useState('');
 
     useEffect(() => {
@@ -62,7 +61,8 @@ const Settings = () => {
             body: JSON.stringify({ name: profile.name, email: profile.email, phone: profile.phone })
         });
         const json = await res.json();
-        json.success ? toast.success('Profile updated!') : toast.error(json.error || 'Failed');
+        if (json.success) toast.success('Profile updated!');
+        else toast.error(json.error || 'Failed');
     };
 
     const handleChangePassword = async (e) => {
@@ -90,8 +90,6 @@ const Settings = () => {
             const json = await res.json();
             if (json.success) {
                 setQrCode(json.qrCode);
-                setBackupKeys(json.backupKeys);
-
                 // Force Native Download Vault Sequence
                 const blob = new Blob([json.backupKeys.join('\n')], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
@@ -175,7 +173,7 @@ const Settings = () => {
             } else {
                 toast.error(json.error || 'Failed to dispatch invite');
             }
-        } catch (error) {
+        } catch {
             toast.error("Network connection failed.");
         }
         setIsInviting(false);

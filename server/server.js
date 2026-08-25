@@ -31,6 +31,7 @@ connectDB().then(() => initScheduler());
 
 // Routes
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(express.static(path.resolve(__dirname, '../client/dist')));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/files', require('./routes/fileRoutes'));
 app.use('/api/executions', require('./routes/executionRoutes'));

@@ -50,7 +50,7 @@ const Navbar = () => {
                     }));
                     setNotifications(mapped);
                 }
-            } catch (e) { }
+            } catch { }
         }
         loadInitialNotifications();
 

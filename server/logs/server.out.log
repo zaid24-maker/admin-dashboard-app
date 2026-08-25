@@ -1,0 +1,2 @@
+◇ injected env (6) from .env // tip: ⌘ suppress logs { quiet: true }
+Server and WebSockets running on port 5001

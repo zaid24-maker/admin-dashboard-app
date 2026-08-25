@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Workflow, Activity, Settings, ChevronLeft, ChevronRight, PlaySquare, CalendarDays, BarChart2, Target, Server, UploadCloud } from 'lucide-react';
+import { Home, Workflow, Settings, ChevronLeft, ChevronRight, PlaySquare, CalendarDays, BarChart2, Target, Server, UploadCloud } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { hoverVariants } from '../utils/motion';
 

@@ -4,7 +4,7 @@ import {
     AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
     Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Label
 } from 'recharts';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { FileDown, FileText, BarChart2, CheckCircle2, XCircle, Clock, Filter } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
 

@@ -6,13 +6,12 @@ import { pageVariants } from '../utils/motion';
 
 const DashboardLayout = () => {
     const token = localStorage.getItem('token');
+    const location = useLocation();
 
     // No token = not logged in, send to login
     if (!token) {
         return <Navigate to="/login" replace />;
     }
-
-    const location = useLocation();
 
     return (
         <div className="flex w-full h-screen bg-background text-foreground">
