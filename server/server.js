@@ -56,7 +56,10 @@ io.on('connection', (socket) => {
 });
 
 app.get(/(.*)/, (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../client/dist/index.html'));
+    const fs = require('fs');
+    const indexPath = path.resolve(__dirname, '../client/dist/index.html');
+    if (fs.existsSync(indexPath)) res.sendFile(indexPath);
+    else res.status(200).json({ message: "API is running. (Frontend is hosted on Vercel)" });
 });
 
 // Telemetry Worker Thread Initiation (Phase 19)
